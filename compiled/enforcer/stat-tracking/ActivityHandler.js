@@ -37,7 +37,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
-const main_1 = require("../main");
+const MainT_1 = require("../MainT");
 const User_1 = __importDefault(require("./User"));
 const Song_1 = __importDefault(require("./Song"));
 const GeneralUtils_1 = __importStar(require("../utils/GeneralUtils"));
@@ -106,7 +106,7 @@ class ActivityHandler {
         if (Date.now() - this.lastSave > 1000 * 60) {
             console.log("Saving data at " + new Date().toLocaleString());
             this.lastSave = Date.now();
-            main_1.main.getFileHandler().performDataSave(this);
+            MainT_1.main.getFileHandler().performDataSave(this);
         }
     }
 }

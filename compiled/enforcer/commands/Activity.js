@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const BaseCommand_1 = __importDefault(require("../classes/BaseCommand"));
-const main_1 = require("../main");
+const MainT_1 = require("../MainT");
 const ActivityMethods_1 = __importDefault(require("../utils/ActivityMethods"));
 class Activity extends BaseCommand_1.default {
     Activity() {
@@ -34,7 +34,7 @@ class Activity extends BaseCommand_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
             yield interaction.deferReply();
-            let activities = main_1.main.getActivityHandler();
+            let activities = MainT_1.main.getActivityHandler();
             console.log(activities.songs);
             //console.log(activities.users);
             activities.users.forEach(user => {

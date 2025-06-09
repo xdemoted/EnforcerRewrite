@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserActivity = void 0;
 const discord_js_1 = require("discord.js");
-const main_1 = require("../main");
+const MainT_1 = require("../MainT");
 class UserActivity {
     constructor(user) {
         var _a;
@@ -49,7 +49,7 @@ exports.UserActivity = UserActivity;
 class ActivityMethods {
     static getAllActivity() {
         return __awaiter(this, void 0, void 0, function* () {
-            const guilds = main_1.main.getClient().guilds.cache.map(guild => guild);
+            const guilds = MainT_1.main.getClient().guilds.cache.map(guild => guild);
             let members = [];
             for (const guild of guilds) {
                 const guildMembers = yield guild.members.fetch();
@@ -65,7 +65,7 @@ class ActivityMethods {
     static getActivity(user) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            const guilds = main_1.main.getClient().guilds.cache.map(guild => guild);
+            const guilds = MainT_1.main.getClient().guilds.cache.map(guild => guild);
             for (const guild of guilds) {
                 const guildMembers = yield guild.members.fetch();
                 for (let member of guildMembers.values()) {
