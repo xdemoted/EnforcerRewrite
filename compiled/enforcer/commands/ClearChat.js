@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const BaseCommand_1 = __importDefault(require("../classes/BaseCommand"));
-const MainT_1 = require("../MainT");
+const Main_1 = require("../Main");
 class Activity extends BaseCommand_1.default {
     Activity() {
     }
@@ -28,7 +28,7 @@ class Activity extends BaseCommand_1.default {
     }
     execute(interaction) {
         return __awaiter(this, void 0, void 0, function* () {
-            let guilds = MainT_1.main.getClient().guilds.cache.map(guild => guild);
+            let guilds = Main_1.main.getClient().guilds.cache.map(guild => guild);
             let message = "";
             while (message.length < 2000) {
                 message += "# ‎\n";

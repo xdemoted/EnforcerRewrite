@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const BaseCommand_1 = __importDefault(require("../classes/BaseCommand"));
-const MainT_1 = require("../MainT");
+const Main_1 = require("../Main");
 class Tag extends BaseCommand_1.default {
     constructor() {
         super(...arguments);
@@ -77,16 +77,16 @@ class Tag extends BaseCommand_1.default {
                 replies.push(i.user.id);
                 switch (i.customId) {
                     case "mommy":
-                        yield i.reply(`**${i.user.displayName}** ` + MainT_1.main.getRandom("mommy") + " **(mommy)**");
+                        yield i.reply(`**${i.user.displayName}** ` + Main_1.main.getRandom("mommy") + " **(mommy)**");
                         break;
                     case "smash":
-                        yield i.reply(`**${i.user.displayName}** ` + MainT_1.main.getRandom("smash") + " **(smash)**");
+                        yield i.reply(`**${i.user.displayName}** ` + Main_1.main.getRandom("smash") + " **(smash)**");
                         break;
                     case "bodybag":
-                        yield i.reply(`**${i.user.displayName}** ` + MainT_1.main.getRandom("bodybag") + " **(bodybag)**");
+                        yield i.reply(`**${i.user.displayName}** ` + Main_1.main.getRandom("bodybag") + " **(bodybag)**");
                         break;
                     case "pass":
-                        yield i.reply(`**${i.user.displayName}** ` + MainT_1.main.getRandom("pass") + " **(pass)**");
+                        yield i.reply(`**${i.user.displayName}** ` + Main_1.main.getRandom("pass") + " **(pass)**");
                         break;
                 }
             }));

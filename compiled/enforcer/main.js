@@ -18,8 +18,6 @@ const BaseCommand_1 = __importDefault(require("./classes/BaseCommand"));
 const fs_1 = __importDefault(require("fs"));
 const ActivityHandler_1 = __importDefault(require("./stat-tracking/ActivityHandler"));
 const FileHandler_1 = __importDefault(require("./utils/FileHandler"));
-const User_1 = __importDefault(require("./classes/api/mongodb/User"));
-const mongodb_1 = require("mongodb");
 class main {
     static start() {
         require('dotenv').config({ path: "../resources/config.env" }); // Load environment variables
@@ -108,13 +106,6 @@ class main {
         return "failed to get random message.";
     }
     static test() {
-        const ser = new User_1.default("test", "test", "test", new mongodb_1.ObjectId());
-        ser.xp += 50;
-        console.log(ser.getLevel());
-        ser.xp += 50;
-        console.log(ser.getLevel());
-        ser.xp += 155;
-        console.log(ser.getLevel());
     }
 }
 exports.main = main;
