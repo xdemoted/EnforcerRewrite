@@ -23,3 +23,9 @@ export default class User {
         return level;
     }
 }
+
+class stats {
+    totalMessages: number = 0;
+    gamesWon: number = 0;
+    
+}
