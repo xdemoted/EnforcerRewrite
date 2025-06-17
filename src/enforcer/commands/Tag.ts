@@ -1,7 +1,7 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import BaseCommand from "../classes/BaseCommand";
 import ImageURLVerify from "../utils/ImageURLVerify";
-import { main } from "../Main";
+import { Main } from "../Main";
 import WaifuRandom from "../classes/api/WaifuRandom";
 
 class Tag extends BaseCommand {
@@ -68,16 +68,16 @@ class Tag extends BaseCommand {
             replies.push(i.user.id);
             switch (i.customId) {
                 case "mommy":
-                    await i.reply(`**${i.user.displayName}** ` + main.getRandom("mommy") + " **(mommy)**");
+                    await i.reply(`**${i.user.displayName}** ` + Main.getRandom("mommy") + " **(mommy)**");
                     break;
                 case "smash":
-                    await i.reply(`**${i.user.displayName}** ` + main.getRandom("smash") + " **(smash)**");
+                    await i.reply(`**${i.user.displayName}** ` + Main.getRandom("smash") + " **(smash)**");
                     break;
                 case "bodybag":
-                    await i.reply(`**${i.user.displayName}** ` + main.getRandom("bodybag") + " **(bodybag)**");
+                    await i.reply(`**${i.user.displayName}** ` + Main.getRandom("bodybag") + " **(bodybag)**");
                     break;
                 case "pass":
-                    await i.reply(`**${i.user.displayName}** ` + main.getRandom("pass") + " **(pass)**");
+                    await i.reply(`**${i.user.displayName}** ` + Main.getRandom("pass") + " **(pass)**");
                     break;
             }
         });

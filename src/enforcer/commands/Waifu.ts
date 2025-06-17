@@ -1,7 +1,7 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors } from "discord.js";
 import BaseCommand from "../classes/BaseCommand";
 import ImageURLVerify from "../utils/ImageURLVerify";
-import { main } from "../Main";
+import { Main } from "../Main";
 import WaifuRandom from "../classes/api/WaifuRandom";
 
 class Waifu extends BaseCommand {
@@ -26,6 +26,13 @@ class Waifu extends BaseCommand {
     public async execute(interaction: CommandInteraction): Promise<void> {
         interaction.deferReply();
         let embedBuilder = new EmbedBuilder();
+
+        if (interaction.channelId == "1328978895738765373" || interaction.channelId == "858439510425337926" && Math.random() < 0.1) {
+            embedBuilder.setTitle("Connection Terminated");
+            embedBuilder.setDescription(require("../../resources/speech.txt").replace(/%user%/g, interaction.user.username));
+            await interaction.editReply({ embeds: [embedBuilder] });
+            return;
+        }
 
         embedBuilder.setTitle("Random Waifu");
         embedBuilder.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() });
@@ -73,16 +80,16 @@ class Waifu extends BaseCommand {
                 replies.push(i.user.id);
                 switch (i.customId) {
                     case "mommy":
-                        await i.reply(`**${i.user.displayName}** ` + main.getRandom("mommy") + " **(mommy)**");
+                        await i.reply(`**${i.user.displayName}** ` + Main.getRandom("mommy") + " **(mommy)**");
                         break;
                     case "smash":
-                        await i.reply(`**${i.user.displayName}** ` + main.getRandom("smash") + " **(smash)**");
+                        await i.reply(`**${i.user.displayName}** ` + Main.getRandom("smash") + " **(smash)**");
                         break;
                     case "bodybag":
-                        await i.reply(`**${i.user.displayName}** ` + main.getRandom("bodybag") + " **(bodybag)**");
+                        await i.reply(`**${i.user.displayName}** ` + Main.getRandom("bodybag") + " **(bodybag)**");
                         break;
                     case "pass":
-                        await i.reply(`**${i.user.displayName}** ` + main.getRandom("pass") + " **(pass)**");
+                        await i.reply(`**${i.user.displayName}** ` + Main.getRandom("pass") + " **(pass)**");
                         break;
                 }
             });

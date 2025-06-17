@@ -1,14 +1,10 @@
-import { ApplicationIntegrationType, Client, Partials, SlashCommandBuilder, TextChannel, REST, Routes, InteractionContextType, ActionRowBuilder, ButtonBuilder, ButtonStyle, User, ApplicationCommandOptionType } from "discord.js";
-import ImageURLVerify from "./utils/ImageURLVerify";
-import { ClientApplication } from "discord.js";
+import { Client, Partials, REST, Routes } from "discord.js";
 import BaseCommand from "./classes/BaseCommand";
 import fs from "fs";
 import ActivityHandler from "./stat-tracking/ActivityHandler";
 import FileHandler from "./utils/FileHandler";
-import APIUser from "./classes/api/mongodb/User";
-import { ObjectId } from "mongodb";
 
-export class main {
+export class Main {
     private static client: Client = new Client({ partials: [Partials.Message, Partials.Channel, Partials.Reaction, Partials.GuildMember, Partials.User], intents: 131071 });
     private static commands: BaseCommand[] = [];
     private static messages = require("../resources/messages.json");
@@ -127,4 +123,4 @@ export class main {
     }
 }
 
-main.start();
+Main.start();

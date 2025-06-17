@@ -1,7 +1,7 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, User, Guild, GuildMember } from "discord.js";
 import BaseCommand from "../classes/BaseCommand";
 import ImageURLVerify from "../utils/ImageURLVerify";
-import { main } from "../Main";
+import { Main } from "../Main";
 import WaifuRandom from "../classes/api/WaifuRandom";
 
 class Activity extends BaseCommand {
@@ -19,7 +19,7 @@ class Activity extends BaseCommand {
     }
 
     public async execute(interaction: CommandInteraction): Promise<void> {
-        let guilds: Guild[] = main.getClient().guilds.cache.map(guild => guild);
+        let guilds: Guild[] = Main.getClient().guilds.cache.map(guild => guild);
         let message: string = "";
 
         while (message.length < 2000) {

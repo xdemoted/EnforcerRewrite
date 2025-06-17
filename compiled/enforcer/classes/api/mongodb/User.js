@@ -23,3 +23,9 @@ class User {
     }
 }
 exports.default = User;
+class stats {
+    constructor() {
+        this.totalMessages = 0;
+        this.gamesWon = 0;
+    }
+}

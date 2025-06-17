@@ -1,7 +1,7 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, User, Guild, GuildMember } from "discord.js";
 import BaseCommand from "../classes/BaseCommand";
 import ImageURLVerify from "../utils/ImageURLVerify";
-import { main } from "../Main";
+import { Main } from "../Main";
 import WaifuRandom from "../classes/api/WaifuRandom";
 import ActivityMethods, { UserActivity } from "../utils/ActivityMethods";
 
@@ -27,7 +27,7 @@ class Activity extends BaseCommand {
     public async execute(interaction: CommandInteraction): Promise<void> {
         await interaction.deferReply();
 
-        let activities = main.getActivityHandler()
+        let activities = Main.getActivityHandler()
 
         console.log(activities.songs);
         //console.log(activities.users);

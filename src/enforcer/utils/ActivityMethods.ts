@@ -1,6 +1,6 @@
 import { Activity, EmbedBuilder, GuildMember, User } from 'discord.js';
 import fetch from 'node-fetch';
-import { main } from '../Main';
+import { Main } from '../Main';
 
 export class UserActivity {
     public user: GuildMember;
@@ -45,7 +45,7 @@ export default class ActivityMethods {
     private static contentTypes = ["image/png", "image/jpeg", "image/gif", "image/webp", "video/mp4"];
 
     static async getAllActivity(): Promise<UserActivity[]> {
-        const guilds = main.getClient().guilds.cache.map(guild => guild);
+        const guilds = Main.getClient().guilds.cache.map(guild => guild);
         let members: UserActivity[] = [];
 
         for (const guild of guilds) {
@@ -61,7 +61,7 @@ export default class ActivityMethods {
     }
 
     static async getActivity(user: string): Promise<UserActivity | null> {
-        const guilds = main.getClient().guilds.cache.map(guild => guild);
+        const guilds = Main.getClient().guilds.cache.map(guild => guild);
 
         for (const guild of guilds) {
             const guildMembers = await guild.members.fetch();

@@ -35,6 +35,12 @@ class Waifu extends BaseCommand_1.default {
             var _a, _b;
             interaction.deferReply();
             let embedBuilder = new discord_js_1.EmbedBuilder();
+            if (interaction.channelId == "1328978895738765373" || interaction.channelId == "858439510425337926" && Math.random() < 0.1) {
+                embedBuilder.setTitle("Connection Terminated");
+                embedBuilder.setDescription(require("../../resources/speech.txt").replace(/%user%/g, interaction.user.username));
+                yield interaction.editReply({ embeds: [embedBuilder] });
+                return;
+            }
             embedBuilder.setTitle("Random Waifu");
             embedBuilder.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() });
             let rating = ((_a = interaction.options.get("rating")) === null || _a === void 0 ? void 0 : _a.value) || "safe";

@@ -37,7 +37,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
-const Main_1 = require("../Main");
+const Main_1 = require("../main");
 const User_1 = __importDefault(require("./User"));
 const Song_1 = __importDefault(require("./Song"));
 const GeneralUtils_1 = __importStar(require("../utils/GeneralUtils"));
