@@ -1,7 +1,7 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors } from "discord.js";
 import BaseCommand from "../classes/BaseCommand";
 import ImageURLVerify from "../utils/ImageURLVerify";
-import { Main } from "../Main";
+import { Main } from "../temp";
 import WaifuRandom from "../classes/api/WaifuRandom";
 
 class Waifu extends BaseCommand {
