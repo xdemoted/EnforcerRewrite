@@ -1,13 +1,10 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, User, Guild, GuildMember } from "discord.js";
 import BaseCommand from "../classes/BaseCommand";
 import ImageURLVerify from "../utils/ImageURLVerify";
-import { Main } from "../Main";
-import WaifuRandom from "../classes/api/WaifuRandom";
+import { Main } from "../main";
+import WaifuRandom from "../classes/api/Waifu";
 
-class Activity extends BaseCommand {
-
-    public Activity() {
-    }
+class ClearChat extends BaseCommand {
 
     public getCommand(): RESTPostAPIChatInputApplicationCommandsJSONBody {
         return new SlashCommandBuilder()
@@ -19,7 +16,7 @@ class Activity extends BaseCommand {
     }
 
     public async execute(interaction: CommandInteraction): Promise<void> {
-        let guilds: Guild[] = Main.getClient().guilds.cache.map(guild => guild);
+        let guilds: Guild[] = Main.getInstance().getClient().guilds.cache.map(guild => guild);
         let message: string = "";
 
         while (message.length < 2000) {
@@ -31,4 +28,4 @@ class Activity extends BaseCommand {
     }
 }
 
-module.exports = new Activity();
+module.exports = new ClearChat();

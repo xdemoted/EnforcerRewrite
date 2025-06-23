@@ -1,8 +1,8 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import BaseCommand from "../classes/BaseCommand";
 import ImageURLVerify from "../utils/ImageURLVerify";
-import { Main } from "../Main";
-import WaifuRandom from "../classes/api/WaifuRandom";
+import { Main } from "../main";
+import WaifuRandom from "../classes/api/Waifu";
 
 class Tag extends BaseCommand {
     private validTags: string[] = ["Mavuika", "Citlali", "Esdeath", "Ryuko", "Lumine", "Eula", "Hu Tao", "Ram", "Genshin", "Honkai", "Zenless"];
@@ -68,16 +68,16 @@ class Tag extends BaseCommand {
             replies.push(i.user.id);
             switch (i.customId) {
                 case "mommy":
-                    await i.reply(`**${i.user.displayName}** ` + Main.getRandom("mommy") + " **(mommy)**");
+                    await i.reply(`**${i.user.displayName}** ` + Main.getInstance().getRandom("mommy") + " **(mommy)**");
                     break;
                 case "smash":
-                    await i.reply(`**${i.user.displayName}** ` + Main.getRandom("smash") + " **(smash)**");
+                    await i.reply(`**${i.user.displayName}** ` + Main.getInstance().getRandom("smash") + " **(smash)**");
                     break;
                 case "bodybag":
-                    await i.reply(`**${i.user.displayName}** ` + Main.getRandom("bodybag") + " **(bodybag)**");
+                    await i.reply(`**${i.user.displayName}** ` + Main.getInstance().getRandom("bodybag") + " **(bodybag)**");
                     break;
                 case "pass":
-                    await i.reply(`**${i.user.displayName}** ` + Main.getRandom("pass") + " **(pass)**");
+                    await i.reply(`**${i.user.displayName}** ` + Main.getInstance().getRandom("pass") + " **(pass)**");
                     break;
             }
         });

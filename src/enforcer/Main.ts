@@ -3,16 +3,23 @@ import BaseCommand from "./classes/BaseCommand";
 import fs from "fs";
 import ActivityHandler from "./stat-tracking/ActivityHandler";
 import FileHandler from "./utils/FileHandler";
+import EventHandler from "./handlers/EventHandler";
+import MongoHandler from "./handlers/MongoHandler";
 
 export class Main {
-    private static client: Client = new Client({ partials: [Partials.Message, Partials.Channel, Partials.Reaction, Partials.GuildMember, Partials.User], intents: 131071 });
-    private static commands: BaseCommand[] = [];
-    private static messages = require("../resources/messages.json");
-    private static activityHandler: ActivityHandler = new ActivityHandler();
-    private static fileHandler: FileHandler = new FileHandler();
+    private static instance: Main = new Main();
 
-    static start(): void {
+    private client: Client = new Client({ partials: [Partials.Message, Partials.Channel, Partials.Reaction, Partials.GuildMember, Partials.User], intents: 131071 });
+    private commands: BaseCommand[] = [];
+    private messages = require("../resources/messages.json");
+    private activityHandler: ActivityHandler = new ActivityHandler();
+    private fileHandler: FileHandler = new FileHandler();
+    private eventHandler?: EventHandler;
+
+    private constructor() {
+        console.log("New Instance of Main created.");
         require('dotenv').config({ path: "../resources/config.env" }); // Load environment variables
+        MongoHandler.getInstance();
 
         if (!process.env.BOT_TOKEN) {
             console.error("No bot token provided.");
@@ -30,45 +37,53 @@ export class Main {
                 console.log(`- ${command.getCommand().name}`);
             });
 
+            this.eventHandler = new EventHandler(this);
+
+            this.client.users.fetch("316243027423395841").then(user => {
+                MongoHandler.getInstance().getUser(this.client.user as any).then((user) => {
+                    user.modifyXP(100);
+                    MongoHandler.getInstance().save(user);
+                })
+            });
             this.startCommandListener();
         });
-
-        this.client.on('presenceUpdate', (oldPresence, presence) => {
-            let member = presence?.member
-            if (member) {
-                this.activityHandler.processMember(member);
-            }
-        });
-
-        this.test();
 
         this.client.login(process.env.BOT_TOKEN);
     }
 
-    static getActivityHandler(): ActivityHandler {
+    getActivityHandler(): ActivityHandler {
         return this.activityHandler;
     }
 
-    static getFileHandler(): FileHandler {
+    getFileHandler(): FileHandler {
         return this.fileHandler;
     }
 
-    static getClient(): Client {
+    getClient(): Client {
         return this.client;
     }
 
-    static loadCommands() {
-        fs.readdirSync("./commands").forEach(file => {
-            if (!file.endsWith(".js")) return;
+    loadDirectory(directory: string) {
+        fs.readdirSync(directory).forEach(file => {
+            if (!file.includes(".")&&fs.statSync(directory + "/" + file).isDirectory()) {
+                this.loadDirectory(`${directory}/${file}`);
+            }
 
-            let command = require(`./commands/${file}`);
+            if (!(file.endsWith(".js") || file.endsWith(".ts"))) return;
 
-            if (command instanceof BaseCommand)
+            let command = require(`${directory}/${file}`);
+
+            if (command instanceof BaseCommand) {
                 this.commands.push(command);
+            }
         });
     }
 
-    static registerCommands() {
+    loadCommands() {
+        this.loadDirectory("./commands");
+    }
+
+    registerCommands() {
         const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN || '');
 
         (async () => {
@@ -83,7 +98,7 @@ export class Main {
         })();
     }
 
-    static startCommandListener() {
+    startCommandListener() {
         this.client.on('interactionCreate', async interaction => {
             if (!interaction.isCommand()) return;
 
@@ -99,7 +114,7 @@ export class Main {
         });
     }
 
-    static getRandom(key: string): string {
+    getRandom(key: string): string {
         let list: { message: string, weight: number }[] = this.messages[key];
 
         let totalWeight = 0;
@@ -119,8 +134,7 @@ export class Main {
         return "failed to get random message.";
     }
 
-    static test() {
+    static getInstance(): Main {
+        return Main.instance;
     }
 }
-
-Main.start();

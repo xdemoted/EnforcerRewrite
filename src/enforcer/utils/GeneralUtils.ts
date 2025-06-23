@@ -1,4 +1,19 @@
+import { Operator } from "../classes/Operator";
+
 export default class GeneralUtils {
+    static modifyNumber(number: number, amount: number, operator: Operator = Operator.ADD) {
+        switch (operator) {
+            case Operator.ADD:
+                number += amount;
+            case Operator.SUBTRACT:
+                number -= amount;
+            case Operator.MULTIPLY:
+                number *= amount;
+            case Operator.DIVIDE:
+                number /= amount;
+        }
+    }
+
     static getRandomID(): string {
         return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
     }

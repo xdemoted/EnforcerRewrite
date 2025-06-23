@@ -9,7 +9,9 @@ export default class Song {
 
     constructor(name: string, artists: string) {
         this.name = name;
-        this.artists = artists.split("; ");
+        if (artists) {
+            this.artists = artists.split("; ");
+        }
     }
 
     public getName(): string {

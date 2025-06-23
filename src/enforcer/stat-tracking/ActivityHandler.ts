@@ -1,5 +1,5 @@
 import { ActivityType, GuildMember } from "discord.js";
-import { Main } from "../Main";
+import { Main } from "../main";
 import User from "./User";
 import Song from "./Song";
 import Artist from "./Artist";
@@ -77,7 +77,7 @@ export default class ActivityHandler {
         if (Date.now() - this.lastSave > 1000 * 60) {
             console.log("Saving data at " + new Date().toLocaleString());
             this.lastSave = Date.now();
-            Main.getFileHandler().performDataSave(this);
+            Main.getInstance().getFileHandler().performDataSave(this);
         }
     }
 }

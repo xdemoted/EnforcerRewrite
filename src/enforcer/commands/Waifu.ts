@@ -1,8 +1,9 @@
-import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors } from "discord.js";
+import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, GuildMember, Guild } from "discord.js";
 import BaseCommand from "../classes/BaseCommand";
 import ImageURLVerify from "../utils/ImageURLVerify";
-import { Main } from "../Main";
-import WaifuRandom from "../classes/api/WaifuRandom";
+import { Main } from "../main";
+import fs from "fs";
+import RandomWaifu from "../classes/api/Waifu";
 
 class Waifu extends BaseCommand {
     private row = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -24,13 +25,56 @@ class Waifu extends BaseCommand {
     }
 
     public async execute(interaction: CommandInteraction): Promise<void> {
-        interaction.deferReply();
+        await interaction.deferReply();
         let embedBuilder = new EmbedBuilder();
 
-        if (interaction.channelId == "1328978895738765373" || interaction.channelId == "858439510425337926" && Math.random() < 0.1) {
-            embedBuilder.setTitle("Connection Terminated");
-            embedBuilder.setDescription(require("../../resources/speech.txt").replace(/%user%/g, interaction.user.username));
-            await interaction.editReply({ embeds: [embedBuilder] });
+        var num = Math.random();
+        console.log(num);
+        if ((interaction.channelId == "1328978895738765373" || interaction.channelId == "858439510425337926") && (num < 0.005)) {
+            embedBuilder.setTitle("ランダムなワイフ");
+            embedBuilder.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() });
+            embedBuilder.setImage("https://files.catbox.moe/y1fezu.gif");
+            embedBuilder.setFooter({ text: `評価: 秘密 | タグ: メイド` });
+            let row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder().setCustomId('mommy').setLabel('Mommy?').setStyle(ButtonStyle.Success).setDisabled(true),
+                new ButtonBuilder().setCustomId('smash').setLabel('Smash').setStyle(ButtonStyle.Primary).setDisabled(true),
+                new ButtonBuilder().setCustomId('pass').setLabel('Pass').setStyle(ButtonStyle.Danger).setDisabled(true),
+                new ButtonBuilder().setCustomId('bodybag').setLabel('Bodybag').setStyle(ButtonStyle.Secondary).setDisabled(true)
+            );
+            interaction.editReply({ embeds: [embedBuilder], components: [row] }).then(() => {
+                setTimeout(async () => {
+                    let row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+                        new ButtonBuilder().setCustomId('secret').setLabel('Unauthorized Access').setStyle(ButtonStyle.Danger)
+                    );
+                    embedBuilder = new EmbedBuilder();
+                    embedBuilder.setTitle("Connection Terminated");
+                    const speech = fs.readFileSync("../resources/speech.txt").toString().replace(/%name%/g, interaction.user.displayName);
+                    embedBuilder.setDescription(speech);
+                    (await interaction.editReply({ embeds: [embedBuilder], components: [row] })).createMessageComponentCollector({ filter: i => i.isButton(), time: 60000 }).on('collect', async i => {
+                        let member = i.member
+                        let role = i.guild?.roles.cache.get('1384649452027117618')
+
+                        if (member instanceof GuildMember && i.guild?.id == '917476736223043604' && role) {
+                            member.roles.add(role)
+                            i.reply({ ephemeral: true, content: "Granted Unauthorized Access." })
+                        }
+                    })
+                    embedBuilder = new EmbedBuilder();
+                    setTimeout(() => {
+                        embedBuilder.setTitle("Disabled Waifu");
+                        embedBuilder.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() });
+                        embedBuilder.setImage("https://files.catbox.moe/xlcf5j.webp");
+                        embedBuilder.setFooter({ text: `Tags: Balls | Rating: Explicitly Safe` });
+                        let row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+                            new ButtonBuilder().setCustomId('mommy').setLabel('Mommy?').setStyle(ButtonStyle.Success).setDisabled(true),
+                            new ButtonBuilder().setCustomId('smash').setLabel('Smash').setStyle(ButtonStyle.Primary).setDisabled(true),
+                            new ButtonBuilder().setCustomId('pass').setLabel('Pass').setStyle(ButtonStyle.Danger).setDisabled(true),
+                            new ButtonBuilder().setCustomId('bodybag').setLabel('Bodybag').setStyle(ButtonStyle.Secondary).setDisabled(true)
+                        );
+                        interaction.editReply({ embeds: [embedBuilder], components: [row]})
+                    }, 60000)
+                }, 3000);
+            })
             return;
         }
 
@@ -40,29 +84,16 @@ class Waifu extends BaseCommand {
         let rating = interaction.options.get("rating")?.value as string || "safe";
         let tag = interaction.options.get("tag")?.value as string || "girl";
 
-        /*if (url && url.length > 10) {
-            const result = await ImageURLVerify.verify(url);
-
-            if (typeof result === "string") {
-                await interaction.reply({ content: result, ephemeral: true });
-                return;
-            }
-
-            embedBuilder.setImage(url);
-            embedBuilder.setColor(Colors.Blurple);
-        */
         try {
-            //const response = await fetch('https://api.waifu.im/search?included_tags=waifu');
             const response = await fetch(`https://api.nekosapi.com/v4/images/random?tags=${tag}&rating=${rating}&limit=1&without_tags=boy`);
-            const waifus: WaifuRandom[] = (await response.json());
+            const waifus: RandomWaifu[] = (await response.json());
 
             if (waifus.length === 0) {
                 await interaction.reply({ content: "No waifus found.", ephemeral: true });
                 return;
             }
 
-            [].length;
-            const waifu: WaifuRandom = waifus[0];
+            const waifu: RandomWaifu = waifus[0];
 
             embedBuilder.setImage(waifu.url);
             embedBuilder.setFooter({ text: `Rating: ${waifu.rating} | Tags: ${waifu.tags.join(", ")}` });
@@ -75,25 +106,23 @@ class Waifu extends BaseCommand {
         }
 
         let replies: string[] = [];
-        setTimeout(async () => {
-            (await interaction.editReply({ embeds: [embedBuilder], components: [this.row] })).createMessageComponentCollector({ filter: i => i.isButton() && !replies.includes(i.user.id), time: 180000 }).on('collect', async i => {
-                replies.push(i.user.id);
-                switch (i.customId) {
-                    case "mommy":
-                        await i.reply(`**${i.user.displayName}** ` + Main.getRandom("mommy") + " **(mommy)**");
-                        break;
-                    case "smash":
-                        await i.reply(`**${i.user.displayName}** ` + Main.getRandom("smash") + " **(smash)**");
-                        break;
-                    case "bodybag":
-                        await i.reply(`**${i.user.displayName}** ` + Main.getRandom("bodybag") + " **(bodybag)**");
-                        break;
-                    case "pass":
-                        await i.reply(`**${i.user.displayName}** ` + Main.getRandom("pass") + " **(pass)**");
-                        break;
-                }
-            });
-        }, 250);
+        (await interaction.editReply({ embeds: [embedBuilder], components: [this.row] })).createMessageComponentCollector({ filter: i => i.isButton() && !replies.includes(i.user.id), time: 180000 }).on('collect', async i => {
+            replies.push(i.user.id);
+            switch (i.customId) {
+                case "mommy":
+                    await i.reply(`**${i.user.displayName}** ` + Main.getInstance().getRandom("mommy") + " **(mommy)**");
+                    break;
+                case "smash":
+                    await i.reply(`**${i.user.displayName}** ` + Main.getInstance().getRandom("smash") + " **(smash)**");
+                    break;
+                case "bodybag":
+                    await i.reply(`**${i.user.displayName}** ` + Main.getInstance().getRandom("bodybag") + " **(bodybag)**");
+                    break;
+                case "pass":
+                    await i.reply(`**${i.user.displayName}** ` + Main.getInstance().getRandom("pass") + " **(pass)**");
+                    break;
+            }
+        });
     }
 
 }

@@ -3,6 +3,7 @@ import User from "./User";
 
 export default class ActiveUser extends User {
     public lastMessage = 0;
+    public lastUpdate = 0;
 
     constructor(
         displayname: string,

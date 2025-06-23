@@ -1,4 +1,4 @@
-export default interface WaifuRandom {
+export default interface Waifu {
     id: number;
     url: string;
     rating: string;
