@@ -32,11 +32,6 @@ export class Main {
             this.loadCommands();
             this.registerCommands();
 
-            console.log("The following commands are registered:");
-            this.commands.forEach(command => {
-                console.log(`- ${command.getCommand().name}`);
-            });
-
             this.eventHandler = new EventHandler(this);
 
             this.client.users.fetch("316243027423395841").then(user => {
@@ -63,10 +58,24 @@ export class Main {
         return this.client;
     }
 
-    loadDirectory(directory: string) {
-        fs.readdirSync(directory).forEach(file => {
-            if (!file.includes(".")&&fs.statSync(directory + "/" + file).isDirectory()) {
-                this.loadDirectory(`${directory}/${file}`);
+    loadDirectory(directory: string, level = 1) {
+        const debugPrefix = " -".repeat(level) + " ";
+
+        const files = fs.readdirSync(directory);
+
+        // Sort: files first, directories last
+        files.sort((a, b) => {
+            const aIsDir = !a.includes(".") && fs.statSync(`${directory}/${a}`).isDirectory();
+            const bIsDir = !b.includes(".") && fs.statSync(`${directory}/${b}`).isDirectory();
+            if (aIsDir === bIsDir) return 0;
+            return aIsDir ? 1 : -1;
+        });
+
+        files.forEach(file => {
+            console.log(debugPrefix + file);
+            if (!file.includes(".") && fs.statSync(`${directory}/${file}`).isDirectory()) {
+            this.loadDirectory(`${directory}/${file}`, level + 1);
+            return;
             }
 
             if (!(file.endsWith(".js") || file.endsWith(".ts"))) return;
@@ -74,12 +83,13 @@ export class Main {
             let command = require(`${directory}/${file}`);
 
             if (command instanceof BaseCommand) {
-                this.commands.push(command);
+            this.commands.push(command);
             }
         });
     }
 
     loadCommands() {
+        console.log("Loading commands:");
         this.loadDirectory("./commands");
     }
 

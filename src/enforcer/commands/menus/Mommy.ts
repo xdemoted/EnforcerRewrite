@@ -1,11 +1,11 @@
-import { ApplicationCommandType, ApplicationIntegrationType, ContextMenuCommandBuilder, ContextMenuCommandInteraction, InteractionContextType, RESTPostAPIContextMenuApplicationCommandsJSONBody } from "discord.js";
+import { ApplicationCommandType, ApplicationIntegrationType, ContextMenuCommandBuilder, ContextMenuCommandInteraction, InteractionContextType, RESTPostAPIApplicationCommandsJSONBody, RESTPostAPIContextMenuApplicationCommandsJSONBody } from "discord.js";
 import BaseCommand from "../../classes/BaseCommand";
 import { Main } from "../../main";
 
-export default class Test extends BaseCommand {
+class Mommy extends BaseCommand {
     public getCommand(): RESTPostAPIContextMenuApplicationCommandsJSONBody {
         return new ContextMenuCommandBuilder()
-            .setName("Smash")
+            .setName("Mommy")
             .setContexts([InteractionContextType.PrivateChannel, InteractionContextType.Guild])
             .setIntegrationTypes([ApplicationIntegrationType.UserInstall])
             .setType(ApplicationCommandType.Message)
@@ -13,6 +13,8 @@ export default class Test extends BaseCommand {
     }
 
     public async execute(interaction: ContextMenuCommandInteraction): Promise<void> {
-        await interaction.reply({ content: `**${interaction.user.displayName}** ` + Main.getInstance().getRandom("smash") + " **(smash)**" });
+        await interaction.reply({ content: `**${interaction.user.displayName}** ` + Main.getInstance().getRandom("mommy") + " **(mommy)**" });
     }
 }
+
+module.exports = new Mommy();
