@@ -2,10 +2,10 @@
     "name": "enforcer-rewrite",
     "version": "1.0.0",
     "description": "A TypeScript project",
-    "main": "compiled/enforcer/index.js",
+    "main": "src/enforcer/Main",
     "scripts": {
         "build": "tsc",
-        "start": "node compiled/enforcer/index.js",
+        "start": "ts-node src/enforcer/Main",
         "test": "jest"
     },
     "dependencies": {
