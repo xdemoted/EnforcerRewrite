@@ -15,10 +15,10 @@ export class Main {
     private activityHandler: ActivityHandler = new ActivityHandler();
     private fileHandler: FileHandler = new FileHandler();
     private eventHandler?: EventHandler;
+    private mongo: MongoHandler = MongoHandler.getInstance();
 
     private constructor() {
-        console.log("New Instance of Main created.");
-        require('dotenv').config({ path: "../resources/config.env" }); // Load environment variables
+        require('dotenv').config({ path: "../../../.env" }); // Load environment variables
         MongoHandler.getInstance();
 
         if (!process.env.BOT_TOKEN) {
@@ -142,6 +142,10 @@ export class Main {
         }
 
         return "failed to get random message.";
+    }
+
+    getMongoHandler(): MongoHandler {
+        return this.mongo
     }
 
     static getInstance(): Main {

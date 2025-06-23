@@ -1,3 +1,4 @@
+import { Message } from "discord.js";
 import { Main } from "../main";
 
 export default class EventHandler {
@@ -10,9 +11,6 @@ export default class EventHandler {
     startMessageListener(main: Main): void {
         Main.getInstance().getClient().on('messageCreate', async (message) => {
             if (message.author.bot) return;
-
-            // Check if the message is a command
-
         });
     }
 
@@ -24,5 +22,22 @@ export default class EventHandler {
                 main.getActivityHandler().processMember(member);
             }
         });
+    }
+
+    giveMessageXP(message: Message<boolean>) {
+        if (message.channel.isTextBased()&&message.content.length > 5) {
+            let user = message.author;
+            if (user.bot) return;
+
+            let xp = Math.floor(Math.random() * 10) + 5; // Random XP between 5 and 15
+            let mongoHandler = Main.getInstance().getMongoHandler();
+
+            mongoHandler.getUser(user).then((userData) => {
+                userData.modifyXP(xp);
+                mongoHandler.save(userData);
+            }).catch((error) => {
+                console.error("Error saving user XP:", error);
+            });
+        }
     }
 }
