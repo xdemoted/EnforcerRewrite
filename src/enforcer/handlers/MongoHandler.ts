@@ -1,6 +1,8 @@
 import { Collection, Db, MongoClient, WithId } from "mongodb";
 import User from "../classes/api/mongodb/User";
 import * as discord from "discord.js";
+import GeneralUtils from "../utils/GeneralUtils";
+import ActiveUser from "../classes/api/mongodb/ActiveUser";
 
 export default class MongoHandler {
     private static instance: MongoHandler;
@@ -36,10 +38,17 @@ export default class MongoHandler {
             throw new Error("Users collection is not initialized.");
         }
         const userDoc = await this.collections.users.findOne({ userID: user.id });
-        return userDoc ? User.fromDocument(userDoc) : new User(user.displayName, user.username, user.id);
+        return userDoc ? User.fromDocument(userDoc) : User.create(user.displayName, user.username, user.id);
     }
 
     public save(document: User): void {
+        if ("lastInteract" in document) {
+            delete (document as any).lastInteract;
+        }
+        if ("lastUpdated" in document) {
+            delete (document as any).lastUpdated;
+        }
+
         if (document instanceof User) {
             if (!this.collections.users) {
                 throw new Error("Users collection is not initialized.");

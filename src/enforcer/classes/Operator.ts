@@ -4,5 +4,6 @@ export enum Operator {
     ADD = "+",
     SUBTRACT = "-",
     POWER = "^",
-    MODULO = "%"
+    MODULO = "%",
+    SET = "="
 }

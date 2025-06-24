@@ -5,6 +5,10 @@ import ActivityHandler from "./stat-tracking/ActivityHandler";
 import FileHandler from "./utils/FileHandler";
 import EventHandler from "./handlers/EventHandler";
 import MongoHandler from "./handlers/MongoHandler";
+import dotenv from "dotenv";
+import path from "path";
+
+require('@dotenvx/dotenvx').config({ path: "../../.env"})
 
 export class Main {
     private static instance: Main = new Main();
@@ -18,7 +22,6 @@ export class Main {
     private mongo: MongoHandler = MongoHandler.getInstance();
 
     private constructor() {
-        require('dotenv').config({ path: "../../../.env" }); // Load environment variables
         MongoHandler.getInstance();
 
         if (!process.env.BOT_TOKEN) {
@@ -37,10 +40,10 @@ export class Main {
             this.client.users.fetch("316243027423395841").then(user => {
                 MongoHandler.getInstance().getUser(this.client.user as any).then((user) => {
                     user.modifyXP(100);
+                    user.displayname = "Billy"
                     MongoHandler.getInstance().save(user);
                 })
             });
-            this.startCommandListener();
         });
 
         this.client.login(process.env.BOT_TOKEN);
@@ -108,20 +111,8 @@ export class Main {
         })();
     }
 
-    startCommandListener() {
-        this.client.on('interactionCreate', async interaction => {
-            if (!interaction.isCommand()) return;
-
-            const command = this.commands.find(command => command.getCommand().name === interaction.commandName);
-
-            if (command) {
-                try {
-                    command.execute(interaction);
-                } catch (error) {
-                    console.error("Man this shit is fucked: " + command.getCommand().name)
-                }
-            }
-        });
+    getCommands(): BaseCommand[] {
+        return this.commands;
     }
 
     getRandom(key: string): string {

@@ -9,6 +9,7 @@
         "test": "jest"
     },
     "dependencies": {
+        "@dotenvx/dotenvx": "^1.45.1",
         "discord.js": "^14.18.0",
         "mongodb": "^6.16.0",
         "node-fetch": "^3.3.2",

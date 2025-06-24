@@ -3,36 +3,43 @@ import utils from "../../../utils/GeneralUtils";
 import { Operator } from "../../Operator";
 import GeneralUtils from "../../../utils/GeneralUtils";
 import { Rating } from "../../Rating";
+import Waifu from "../Waifu";
+import XPProfile from "./XPProfile";
+import ActiveUser from "./ActiveUser";
 
-export default class User {
-    private xp: number = 0;
+export default class User extends XPProfile {
+    private guilds: {[key: string]: XPProfile} = {};
 
-    constructor(
-        public displayname: string,
-        public username: string,
-        public userID: string,
-        public _id: ObjectId = new ObjectId()
-    ) { }
+    public displayname: string = "";
+    public username: string = "";
+    public userID: string = "";
+    public _id: ObjectId = new ObjectId()
 
-    public getLevel(): number {
-        let xp = this.xp.valueOf();
-        let level = 0;
-
-        while (xp >= utils.getXPForLevel(level)) {
-            xp -= utils.getXPForLevel(level);
-            level++;
+    public getGuildProfile(guildID: string): XPProfile {
+        if (!this.guilds.has(guildID)) {
+            this.guilds.set(guildID, new XPProfile());
         }
 
-        return level;
-    }
-
-    public modifyXP(amount: number, operator: Operator = Operator.ADD): void {
-        GeneralUtils.modifyNumber(this.xp, amount, operator);
+        return this.guilds.get(guildID)!;
     }
 
     static fromDocument(document: WithId<Document>): User {
-        let user = new User("", "", "", document._id);
-        return Object.assign(user, document);
+        let user = Object.assign(new User(), document);
+        
+        if (!(user.guilds instanceof Map)) {
+            user.guilds = new Map()
+        }
+
+        return user
+    }
+
+    static create(displayname: string, username: string, userID: string): User {
+        let user = new User();
+        user.displayname = displayname;
+        user.username = username;
+        user.userID = userID;
+        user.xp = 0;
+        return user;
     }
 }
 
@@ -40,35 +47,32 @@ class stats {
     totalMessages: number = 0;
     commandsSent: number = 0;
     gamesWon: number = 0;
-    waifus: {
-        [key: string]: {
-            url: string,
-            imageRating: Rating,
-            dominantColor: number[],
-            tags: string[],
-            userRating: "mommy" | "smash" | "pass" | "bodybag"
-        }
-    } = {};
+    waifus: ReducedWaifu[] = [];
 }
 
-class waifus {
-    public url: string
-    public imageRating: Rating
-    public dominantColor: number[]
-    public tags: string[]
-    public userRating: "mommy" | "smash" | "pass" | "bodybag"
+enum UserRating {
+    MOMMY = 0,
+    SMASH = 1,
+    PASS = 2,
+    BODYBAG = 3
+}
 
+class ReducedWaifu {
     constructor(
-        url: string,
-        imageRating: Rating,
-        dominantColor: number[],
-        tags: string[],
-        userRating: "mommy" | "smash" | "pass" | "bodybag"
-    ) {
-        this.url = url;
-        this.imageRating = imageRating;
-        this.dominantColor = dominantColor;
-        this.tags = tags;
-        this.userRating = userRating;
+        public url: string,
+        public imageRating: Rating,
+        public dominantColor: number[],
+        public tags: string[],
+        public userRating: UserRating
+    ) { }
+
+    static fromRandomWaifu(waifu: Waifu, userRating: UserRating): ReducedWaifu {
+        return new ReducedWaifu(
+            waifu.url,
+            waifu.rating,
+            waifu.color_dominant,
+            waifu.tags,
+            userRating
+        );
     }
 }

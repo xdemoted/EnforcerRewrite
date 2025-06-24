@@ -5,13 +5,35 @@ export default class GeneralUtils {
         switch (operator) {
             case Operator.ADD:
                 number += amount;
+                break;
             case Operator.SUBTRACT:
                 number -= amount;
+                break;
             case Operator.MULTIPLY:
                 number *= amount;
+                break;
             case Operator.DIVIDE:
                 number /= amount;
+                break;
+            case Operator.POWER:
+                number = Math.pow(number, amount);
+                break;
+            case Operator.MODULO:
+                number %= amount;
+                break;
+            case Operator.SET:
+                number = amount;
+                break;
         }
+        return number;
+    }
+
+    static timeSince(epoch: number): number {
+        return Date.now() - epoch;
+    }
+
+    static randomNumber(min: number, max: number): number {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
     static getRandomID(): string {
@@ -24,6 +46,18 @@ export default class GeneralUtils {
             newID = this.getRandomID();
         } while (existingIDs.includes(newID));
         return newID;
+    }
+
+    static getLevelForXP(xp: number): number {
+        if (xp < 0) {
+            throw new Error("XP must be a non-negative integer.");
+        }
+        let level = 0;
+        while (xp >= this.getXPForLevel(level)) {
+            xp -= this.getXPForLevel(level);
+            level++;
+        }
+        return level;
     }
 
     public static getXPForLevel(level: number): number {

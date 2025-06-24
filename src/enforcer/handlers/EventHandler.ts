@@ -1,16 +1,36 @@
 import { Message } from "discord.js";
 import { Main } from "../main";
+import UserHandler from "./UserHandler";
+import GeneralUtils from "../utils/GeneralUtils";
 
 export default class EventHandler {
 
     constructor(main: Main) {
         this.startMessageListener(main);
         this.startPresenceListener(main);
+        this.startCommandListener(main);
+    }
+
+    startCommandListener(main: Main) {
+        main.getClient().on('interactionCreate', async interaction => {
+            if (!interaction.isCommand()) return;
+
+            const command = main.getCommands().find(command => command.getCommand().name === interaction.commandName);
+
+            if (command) {
+                try {
+                    command.execute(interaction);
+                    UserHandler.getInstance().giveInteractXP(interaction);
+                } catch (error) {
+                    console.error("Man this shit is fucked: " + command.getCommand().name)
+                }
+            }
+        });
     }
 
     startMessageListener(main: Main): void {
         Main.getInstance().getClient().on('messageCreate', async (message) => {
-            if (message.author.bot) return;
+            UserHandler.getInstance().giveInteractXP(message)
         });
     }
 
@@ -22,22 +42,5 @@ export default class EventHandler {
                 main.getActivityHandler().processMember(member);
             }
         });
-    }
-
-    giveMessageXP(message: Message<boolean>) {
-        if (message.channel.isTextBased()&&message.content.length > 5) {
-            let user = message.author;
-            if (user.bot) return;
-
-            let xp = Math.floor(Math.random() * 10) + 5; // Random XP between 5 and 15
-            let mongoHandler = Main.getInstance().getMongoHandler();
-
-            mongoHandler.getUser(user).then((userData) => {
-                userData.modifyXP(xp);
-                mongoHandler.save(userData);
-            }).catch((error) => {
-                console.error("Error saving user XP:", error);
-            });
-        }
     }
 }
