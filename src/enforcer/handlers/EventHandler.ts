@@ -21,6 +21,10 @@ export default class EventHandler {
                 try {
                     command.execute(interaction);
                     UserHandler.getInstance().giveInteractXP(interaction);
+                    
+                    UserHandler.getInstance().getUser(interaction.user.id).then(user => {
+                        user.stats.commandsSent += 1;
+                    });
                 } catch (error) {
                     console.error("Man this shit is fucked: " + command.getCommand().name)
                 }
@@ -31,6 +35,10 @@ export default class EventHandler {
     startMessageListener(main: Main): void {
         Main.getInstance().getClient().on('messageCreate', async (message) => {
             UserHandler.getInstance().giveInteractXP(message)
+
+            UserHandler.getInstance().getUser(message.author.id).then(user => {
+                user.stats.totalMessages += 1
+            })
         });
     }
 

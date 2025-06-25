@@ -70,7 +70,7 @@ export default class UserHandler {
                     this.users.delete(userID);
                 }
             });
-        }, 10000); // Save every 5 minutes
+        }, 5*60*1000); // Save every 5 minutes
     }
 
     public static getInstance(): UserHandler {
