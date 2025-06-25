@@ -1,5 +1,5 @@
 import { ActivityType, GuildMember } from "discord.js";
-import { Main } from "../main";
+import { Main } from "../Main";
 import User from "./User";
 import Song from "./Song";
 import Artist from "./Artist";

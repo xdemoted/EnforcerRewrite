@@ -1,6 +1,6 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, GuildMember, Guild } from "discord.js";
 import BaseCommand from "../classes/BaseCommand";
-import { Main } from "../main";
+import { Main } from "../Main";
 import fs from "fs";
 import RandomWaifu from "../classes/api/Waifu";
 import UserHandler from "../handlers/UserHandler";

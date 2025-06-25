@@ -1,6 +1,6 @@
 import { ApplicationCommandType, ApplicationIntegrationType, ContextMenuCommandBuilder, ContextMenuCommandInteraction, InteractionContextType, RESTPostAPIApplicationCommandsJSONBody, RESTPostAPIContextMenuApplicationCommandsJSONBody } from "discord.js";
 import BaseCommand from "../../classes/BaseCommand";
-import { Main } from "../../main";
+import { Main } from "../../Main";
 
 class Mommy extends BaseCommand {
     public getCommand(): RESTPostAPIContextMenuApplicationCommandsJSONBody {
