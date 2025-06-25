@@ -8,7 +8,10 @@ import XPProfile from "./XPProfile";
 import ActiveUser from "./ActiveUser";
 
 export default class User extends XPProfile {
-    private guilds: {[key: string]: XPProfile} = {};
+    public guilds: {[key: string]: XPProfile} = {};
+    public guildsMap: Map<string, XPProfile> = new Map();
+
+    public stats: stats = new stats();
 
     public displayname: string = "";
     public username: string = "";
@@ -16,18 +19,18 @@ export default class User extends XPProfile {
     public _id: ObjectId = new ObjectId()
 
     public getGuildProfile(guildID: string): XPProfile {
-        if (!this.guilds.has(guildID)) {
-            this.guilds.set(guildID, new XPProfile());
+        if (!this.guildsMap.has(guildID)) {
+            this.guildsMap.set(guildID, new XPProfile());
         }
 
-        return this.guilds.get(guildID)!;
+        return this.guildsMap.get(guildID)!;
     }
 
     static fromDocument(document: WithId<Document>): User {
         let user = Object.assign(new User(), document);
-        
-        if (!(user.guilds instanceof Map)) {
-            user.guilds = new Map()
+
+        for (const [key, value] of Object.entries(document.guilds || {})) {
+            user.guildsMap.set(key, Object.assign(new XPProfile(), value));
         }
 
         return user
@@ -47,32 +50,22 @@ class stats {
     totalMessages: number = 0;
     commandsSent: number = 0;
     gamesWon: number = 0;
-    waifus: ReducedWaifu[] = [];
+    waifus: WaifuRating[] = [];
 }
 
-enum UserRating {
+export enum UserRating {
     MOMMY = 0,
     SMASH = 1,
     PASS = 2,
     BODYBAG = 3
 }
 
-class ReducedWaifu {
-    constructor(
-        public url: string,
-        public imageRating: Rating,
-        public dominantColor: number[],
-        public tags: string[],
-        public userRating: UserRating
-    ) { }
+export class WaifuRating {
+    public id: number;
+    public rating: UserRating;
 
-    static fromRandomWaifu(waifu: Waifu, userRating: UserRating): ReducedWaifu {
-        return new ReducedWaifu(
-            waifu.url,
-            waifu.rating,
-            waifu.color_dominant,
-            waifu.tags,
-            userRating
-        );
+    constructor(waifuID: number, rating: UserRating) {
+        this.id = waifuID;
+        this.rating = rating;
     }
 }

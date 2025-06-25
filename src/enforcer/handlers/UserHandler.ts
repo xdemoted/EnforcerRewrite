@@ -64,7 +64,7 @@ export default class UserHandler {
     startUserSaveInterval(): void {
         setInterval(() => {
             this.users.forEach((user, userID) => {
-                MongoHandler.getInstance().save(user);
+                MongoHandler.getInstance().saveUser(user);
 
                 if (GeneralUtils.timeSince(user.lastUpdated) > 600000) { // Delete users not updated in the last 10 minutes
                     this.users.delete(userID);

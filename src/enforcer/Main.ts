@@ -36,14 +36,6 @@ export class Main {
             this.registerCommands();
 
             this.eventHandler = new EventHandler(this);
-
-            this.client.users.fetch("316243027423395841").then(user => {
-                MongoHandler.getInstance().getUser(this.client.user as any).then((user) => {
-                    user.modifyXP(100);
-                    user.displayname = "Billy"
-                    MongoHandler.getInstance().save(user);
-                })
-            });
         });
 
         this.client.login(process.env.BOT_TOKEN);

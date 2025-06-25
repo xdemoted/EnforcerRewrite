@@ -1,9 +1,11 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, GuildMember, Guild } from "discord.js";
 import BaseCommand from "../classes/BaseCommand";
-import ImageURLVerify from "../utils/ImageURLVerify";
 import { Main } from "../main";
 import fs from "fs";
 import RandomWaifu from "../classes/api/Waifu";
+import UserHandler from "../handlers/UserHandler";
+import { UserRating } from "../classes/api/mongodb/User";
+import MongoHandler from "../handlers/MongoHandler";
 
 class Waifu extends BaseCommand {
     private row = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -71,7 +73,7 @@ class Waifu extends BaseCommand {
                             new ButtonBuilder().setCustomId('pass').setLabel('Pass').setStyle(ButtonStyle.Danger).setDisabled(true),
                             new ButtonBuilder().setCustomId('bodybag').setLabel('Bodybag').setStyle(ButtonStyle.Secondary).setDisabled(true)
                         );
-                        interaction.editReply({ embeds: [embedBuilder], components: [row]})
+                        interaction.editReply({ embeds: [embedBuilder], components: [row] })
                     }, 60000)
                 }, 3000);
             })
@@ -83,6 +85,7 @@ class Waifu extends BaseCommand {
 
         let rating = interaction.options.get("rating")?.value as string || "safe";
         let tag = interaction.options.get("tag")?.value as string || "girl";
+        let waifu: RandomWaifu;
 
         try {
             const response = await fetch(`https://api.nekosapi.com/v4/images/random?tags=${tag}&rating=${rating}&limit=1&without_tags=boy`);
@@ -93,7 +96,9 @@ class Waifu extends BaseCommand {
                 return;
             }
 
-            const waifu: RandomWaifu = waifus[0];
+            waifu = waifus[0];
+
+            MongoHandler.getInstance().updateWaifu(waifu);
 
             embedBuilder.setImage(waifu.url);
             embedBuilder.setFooter({ text: `Rating: ${waifu.rating} | Tags: ${waifu.tags.join(", ")}` });
@@ -108,19 +113,31 @@ class Waifu extends BaseCommand {
         let replies: string[] = [];
         (await interaction.editReply({ embeds: [embedBuilder], components: [this.row] })).createMessageComponentCollector({ filter: i => i.isButton() && !replies.includes(i.user.id), time: 180000 }).on('collect', async i => {
             replies.push(i.user.id);
+            let userRating: UserRating;
             switch (i.customId) {
                 case "mommy":
                     await i.reply(`**${i.user.displayName}** ` + Main.getInstance().getRandom("mommy") + " **(mommy)**");
+                    userRating = UserRating.MOMMY;
                     break;
                 case "smash":
                     await i.reply(`**${i.user.displayName}** ` + Main.getInstance().getRandom("smash") + " **(smash)**");
+                    userRating = UserRating.SMASH;
                     break;
                 case "bodybag":
                     await i.reply(`**${i.user.displayName}** ` + Main.getInstance().getRandom("bodybag") + " **(bodybag)**");
+                    userRating = UserRating.BODYBAG;
                     break;
                 case "pass":
                     await i.reply(`**${i.user.displayName}** ` + Main.getInstance().getRandom("pass") + " **(pass)**");
+                    userRating = UserRating.PASS;
                     break;
+            }
+
+            if (waifu) {
+                UserHandler.getInstance().getUser(i.user.id).then(async (user) => {
+                    user.addWaifu(waifu.id, userRating);
+                    user.setLastUpdate();
+                })
             }
         });
     }

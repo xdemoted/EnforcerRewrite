@@ -3,11 +3,12 @@ import User from "../classes/api/mongodb/User";
 import * as discord from "discord.js";
 import GeneralUtils from "../utils/GeneralUtils";
 import ActiveUser from "../classes/api/mongodb/ActiveUser";
+import Waifu from "../classes/api/Waifu";
 
 export default class MongoHandler {
     private static instance: MongoHandler;
     private database?: Db;
-    private collections: { users?: Collection, guilds?: Collection } = {};
+    private collections: { [key: string]: Collection } = {};
 
     private constructor() {
         this.connect()
@@ -26,6 +27,7 @@ export default class MongoHandler {
             this.database = client.db("enforcer");
             this.collections.users = this.database.collection("users");
             this.collections.guilds = this.database.collection("guilds");
+            this.collections.waifus = this.database.collection("waifus");
             console.log("Connected to MongoDB successfully.");
         } catch (error) {
             console.error("Failed to connect to MongoDB:", error);
@@ -41,13 +43,30 @@ export default class MongoHandler {
         return userDoc ? User.fromDocument(userDoc) : User.create(user.displayName, user.username, user.id);
     }
 
-    public save(document: User): void {
+    public async updateWaifu(waifu: Waifu) {
+        this.collections.waifus.updateOne(
+            { waifuID: waifu.id },
+            { $set: waifu },
+            { upsert: true }
+        ).catch(error => {
+            console.error("Error saving waifu:", error);
+        });
+    }
+
+    public saveUser(document: User): void {
         if ("lastInteract" in document) {
             delete (document as any).lastInteract;
         }
         if ("lastUpdated" in document) {
             delete (document as any).lastUpdated;
         }
+
+        if (document.guildsMap) {
+            document.guilds = Object.fromEntries(document.guildsMap);
+            delete (document as any).guildsMap;
+        }
+
+        console.log(document.guilds);
 
         if (document instanceof User) {
             if (!this.collections.users) {

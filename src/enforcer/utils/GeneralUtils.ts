@@ -66,6 +66,16 @@ export default class GeneralUtils {
         }
         return Math.floor(5 * Math.pow(level, 2) + 50 * level + 100);
     }
+
+    public static convertToMap<K>(keyObject: {[key: string]: K}): Map<string, K> {
+        const map = new Map<string, K>();
+        for (const key in keyObject) {
+            if (keyObject.hasOwnProperty(key)) {
+                map.set(key, keyObject[key]);
+            }
+        }
+        return map;
+    }
 }
 
 export class SearchResult<K, V> {
