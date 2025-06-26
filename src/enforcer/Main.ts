@@ -2,7 +2,6 @@ import { Client, Partials, REST, Routes } from "discord.js";
 import BaseCommand from "./classes/BaseCommand";
 import fs from "fs";
 import ActivityHandler from "./stat-tracking/ActivityHandler";
-import FileHandler from "./utils/FileHandler";
 import EventHandler from "./handlers/EventHandler";
 import MongoHandler from "./handlers/MongoHandler";
 import dotenv from "dotenv";
@@ -17,7 +16,6 @@ export class Main {
     private commands: BaseCommand[] = [];
     private messages = require("../resources/messages.json");
     private activityHandler: ActivityHandler = new ActivityHandler();
-    private fileHandler: FileHandler = new FileHandler();
     private eventHandler?: EventHandler;
     private mongo: MongoHandler = MongoHandler.getInstance();
 
@@ -43,10 +41,6 @@ export class Main {
 
     getActivityHandler(): ActivityHandler {
         return this.activityHandler;
-    }
-
-    getFileHandler(): FileHandler {
-        return this.fileHandler;
     }
 
     getClient(): Client {
