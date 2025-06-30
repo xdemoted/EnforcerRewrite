@@ -1,6 +1,6 @@
 import { BaseInteraction, Interaction, Message } from "discord.js";
 import ActiveUser from "../classes/api/mongodb/ActiveUser";
-import { Main } from "../main";
+import { Main } from "../Main";
 import GeneralUtils from "../utils/GeneralUtils";
 import MongoHandler from "./MongoHandler";
 

@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { Main } from "../main";
+import { Main } from "../Main";
 import UserHandler from "./UserHandler";
 import GeneralUtils from "../utils/GeneralUtils";
 
