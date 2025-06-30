@@ -22,7 +22,7 @@ export default class User extends XPProfile {
         if (!this.guildsMap.has(guildID)) {
             this.guildsMap.set(guildID, new XPProfile());
         }
-
+        
         return this.guildsMap.get(guildID)!;
     }
 
