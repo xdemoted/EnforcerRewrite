@@ -7,7 +7,6 @@ import EventHandler from "./handlers/EventHandler";
 import MongoHandler from "./handlers/MongoHandler";
 import dotenv from "dotenv";
 import path from "path";
-import FileHandler from "./utils/FileHandler";
 
 require('@dotenvx/dotenvx').config()
 process.chdir("./src/enforcer");
@@ -41,10 +40,6 @@ export class Main {
         });
 
         this.client.login(process.env.BOT_TOKEN);
-    }
-
-    getFileHandler(): FileHandler {
-        return this.fileHandler;
     }
 
     getActivityHandler(): ActivityHandler {
