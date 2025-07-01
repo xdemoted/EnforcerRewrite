@@ -7,7 +7,8 @@ import MongoHandler from "./handlers/MongoHandler";
 import dotenv from "dotenv";
 import path from "path";
 
-require('@dotenvx/dotenvx').config({ path: "../../.env"})
+require('@dotenvx/dotenvx').config()
+process.chdir("./src/enforcer");
 
 export class Main {
     private static instance: Main = new Main();

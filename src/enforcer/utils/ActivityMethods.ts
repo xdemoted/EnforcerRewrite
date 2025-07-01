@@ -1,4 +1,5 @@
 import { Activity, EmbedBuilder, GuildMember, User } from 'discord.js';
+import fetch from 'node-fetch';
 import { Main } from '../Main';
 
 export class UserActivity {
