@@ -37,6 +37,4 @@ export default class ActiveUser extends User {
     public static fromUser(user: User): ActiveUser {
         return Object.assign(new ActiveUser(), user);
     }
-
-    public static toUser
 }

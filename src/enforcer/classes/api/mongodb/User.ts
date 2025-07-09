@@ -8,8 +8,7 @@ import XPProfile from "./XPProfile";
 import ActiveUser from "./ActiveUser";
 
 export default class User extends XPProfile {
-    public guilds: {[key: string]: XPProfile} = {};
-    public guildsMap: Map<string, XPProfile> = new Map();
+    public guilds: Map<string, XPProfile> = new Map();
 
     public stats: stats = new stats();
 
@@ -19,18 +18,20 @@ export default class User extends XPProfile {
     public _id: ObjectId = new ObjectId()
 
     public getGuildProfile(guildID: string): XPProfile {
-        if (!this.guildsMap.has(guildID)) {
-            this.guildsMap.set(guildID, new XPProfile());
+        if (!this.guilds.has(guildID)) {
+            this.guilds.set(guildID, new XPProfile());
         }
         
-        return this.guildsMap.get(guildID)!;
+        return this.guilds.get(guildID)!;
     }
 
     static fromDocument(document: WithId<Document>): User {
         let user = Object.assign(new User(), document);
 
+        user.guilds = new Map<string, XPProfile>();
+
         for (const [key, value] of Object.entries(document.guilds || {})) {
-            user.guildsMap.set(key, Object.assign(new XPProfile(), value));
+            user.guilds.set(key, Object.assign(new XPProfile(), value));
         }
 
         return user

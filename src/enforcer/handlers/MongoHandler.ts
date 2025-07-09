@@ -24,7 +24,7 @@ export default class MongoHandler {
         const client = new MongoClient(uri);
         try {
             await client.connect();
-            this.database = client.db("enforcer");
+            this.database = client.db(process.env.DB_NAME);
             this.collections.users = this.database.collection("users");
             this.collections.guilds = this.database.collection("guilds");
             this.collections.waifus = this.database.collection("waifus");
@@ -59,11 +59,6 @@ export default class MongoHandler {
         }
         if ("lastUpdated" in document) {
             delete (document as any).lastUpdated;
-        }
-
-        if (document.guildsMap) {
-            document.guilds = Object.fromEntries(document.guildsMap);
-            delete (document as any).guildsMap;
         }
 
         console.log(document.guilds);

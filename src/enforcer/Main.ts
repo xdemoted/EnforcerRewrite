@@ -19,11 +19,19 @@ export class Main {
     private activityHandler: ActivityHandler = new ActivityHandler();
     private eventHandler?: EventHandler;
     private mongo: MongoHandler = MongoHandler.getInstance();
+    private token: string = "";
 
     private constructor() {
         MongoHandler.getInstance();
 
-        if (!process.env.BOT_TOKEN) {
+        if (process.env.DEBUG) {
+            console.log("Running in debug mode.")
+            this.token = process.env.DEBUG_TOKEN || ""
+        } else {
+            this.token = process.env.BOT_TOKEN || ""
+        }
+
+        if (!(this.token.length > 0)) {
             console.error("No bot token provided.");
             return;
         }
