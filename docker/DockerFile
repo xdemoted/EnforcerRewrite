@@ -1,38 +1,14 @@
-FROM node:22@sha256:37ff334612f77d8f999c10af8797727b731629c26f2e83caa6af390998bdc49c
+FROM ghcr.io/puppeteer/puppeteer:24.16.0
 
-# Configure default locale (important for chrome-headless-shell).
-ENV LANG=en_US.UTF-8 
-# UID of the non-root user 'pptruser'
-ENV PPTRUSER_UID=10042
-# Attempts to start a new DBUS session if none is present
-ENV DBUS_SESSION_BUS_ADDRESS=autolaunch:
+RUN         npm install --global npm@latest typescript ts-node @types/node
 
-# Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
-# Note: this installs the necessary libs to make the bundled version of Chrome that Puppeteer
-# installs, work.
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-khmeros \
-    fonts-kacst fonts-freefont-ttf dbus dbus-x11
+USER        container
+ENV         USER=container HOME=/home/container
+WORKDIR     /home/container
 
-# Add pptruser.
-RUN groupadd -r pptruser && useradd -u $PPTRUSER_UID -rm -g pptruser -G audio,video pptruser
+STOPSIGNAL SIGINT
 
-USER $PPTRUSER_UID
-
-WORKDIR /home/pptruser
-
-COPY puppeteer-browsers-latest.tgz puppeteer-latest.tgz puppeteer-core-latest.tgz ./
-
-
-# Install @puppeteer/browsers, puppeteer and puppeteer-core into /home/pptruser/node_modules.
-RUN npm i ./puppeteer-browsers-latest.tgz ./puppeteer-core-latest.tgz ./puppeteer-latest.tgz \
-    && rm ./puppeteer-browsers-latest.tgz ./puppeteer-core-latest.tgz ./puppeteer-latest.tgz
-
-# Install system dependencies as root.
-USER root
-# Overriding the cache directory to install the deps for the Chrome
-# version installed for pptruser. 
-RUN PUPPETEER_CACHE_DIR=/home/pptruser/.cache/puppeteer \
-    npx puppeteer browsers install chrome --install-deps
-
-USER $PPTRUSER_UID
+COPY        --chown=container:container ./entrypoint.sh /entrypoint.sh
+RUN         chmod +x /entrypoint.sh
+ENTRYPOINT    ["/usr/bin/tini", "-g", "--"]
+CMD         ["/entrypoint.sh"]
