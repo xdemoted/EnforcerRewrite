@@ -1,5 +1,7 @@
 FROM ghcr.io/puppeteer/puppeteer:24.16.0
 
+USER root
+
 RUN         npm install --global npm@latest typescript ts-node @types/node
 
 USER        container
