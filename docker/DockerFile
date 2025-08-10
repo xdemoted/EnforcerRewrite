@@ -13,5 +13,7 @@ WORKDIR     /home/container
 STOPSIGNAL SIGINT
 
 COPY ./entrypoint.sh /entrypoint.sh
+RUN         chmod +x /entrypoint.sh
+
 ENTRYPOINT    ["/usr/bin/tini", "-g", "--"]
 CMD         ["/entrypoint.sh"]
