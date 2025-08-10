@@ -19,14 +19,14 @@ export class Main {
     private activityHandler: ActivityHandler = new ActivityHandler();
     private eventHandler?: EventHandler;
     private mongo: MongoHandler = MongoHandler.getInstance();
+    private token: string | undefined;
+    private lockdown: boolean = false;
+    private allowedUsers: string[] = ["316243027423395841"];
 
     private constructor() {
         MongoHandler.getInstance();
 
-        if (!process.env.BOT_TOKEN) {
-            console.error("No bot token provided.");
-            return;
-        }
+        if (Main.getVariables().DEBUG) this.lockdown = true;
 
         this.client.on('ready', () => {
             console.log(`Logged in as ${this.client.user?.tag}`);
@@ -37,8 +37,44 @@ export class Main {
             this.eventHandler = new EventHandler(this);
         });
 
-        this.client.login(process.env.BOT_TOKEN);
+        this.login();
     }
+
+    login() {
+        const variables = Main.getVariables();
+        if (variables.DEBUG && variables.DEBUG_TOKEN) {
+            console.log("Debug mode enabled. Using test token.");
+            this.token = variables.DEBUG_TOKEN;
+            this.client.login(variables.DEBUG_TOKEN);
+        } else if (variables.BOT_TOKEN) {
+            console.log("Using production token.");
+            this.token = variables.BOT_TOKEN;
+            this.client.login(variables.BOT_TOKEN);
+        } else {
+            console.error("No bot token provided in environment variables.");
+        }
+    }
+
+    addAllowedUser(userID: string): void {
+        this.allowedUsers.push(userID);
+    }
+
+    removeAllowedUser(userID: string): void {
+        this.allowedUsers = this.allowedUsers.filter(id => id !== userID);
+    }
+
+    getAllowedUsers(): string[] {
+        return this.allowedUsers;
+    }
+
+    toggleLockdown(): void {
+        this.lockdown = !this.lockdown;
+    }
+
+    getLockdown(): boolean {
+        return this.lockdown;
+    }
+
 
     getActivityHandler(): ActivityHandler {
         return this.activityHandler;
@@ -84,7 +120,7 @@ export class Main {
     }
 
     registerCommands() {
-        const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN || '');
+        const rest = new REST({ version: '10' }).setToken(this.token || '');
 
         (async () => {
             try {
@@ -129,4 +165,19 @@ export class Main {
     static getInstance(): Main {
         return Main.instance;
     }
+
+    static getVariables(): Env {
+        return process.env as unknown as Env;
+    }
+}
+
+interface Env {
+    DB_CONN_STRING: string | undefined;
+    DB_NAME: string | undefined;
+    DEBUG: boolean | undefined;
+    DEBUG_TOKEN: string | undefined;
+    DEBUG_SAVE_CD: number | undefined;
+    BOT_TOKEN: string | undefined;
+    GUILDS_COLLECTION: string | undefined;
+    USERS_COLLECTION: string | undefined;
 }

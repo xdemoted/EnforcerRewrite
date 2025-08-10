@@ -1,6 +1,6 @@
 export enum Rating {
-    SAFE = "SAFE",
-    SUGGESTIVE = "SUGGESTIVE",
-    BORDERLINE = "BORDERLINE",
-    EXPLICIT = "EXPLICIT"
+    SAFE = "safe",
+    SUGGESTIVE = "suggestive",
+    BORDERLINE = "borderline",
+    EXPLICIT = "explicit"
 }

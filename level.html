@@ -1,0 +1,124 @@
+<html>
+
+<head>
+    <style>
+        :root {
+            --scale: 2;
+            --primary-color: #00f7ff;
+            --text-color: white;
+            --username: "Demoted"; 
+            --level-card-bg: url("https://files.catbox.moe/fzx1xz.png");
+            --avatar-url: url("https://cdn.discordapp.com/avatars/316243027423395841/a_88c4ba67dc6038c82a585c2b7e8305f0.webp?size=1024");
+        }
+
+        h2 {
+            font-size: calc(20px * var(--scale));
+            margin: 0;
+            color: white;
+        }
+
+        p {
+            font-size: calc(14px * var(--scale));
+            margin: 0;
+            color: white;
+        }
+
+        body .levelcard {
+            font-family: 'Lucida Console';
+            width: calc(400px * var(--scale));
+            height: calc(100px * var(--scale));
+            background-image: var(--level-card-bg);
+            background-size: cover;
+            display: flex;
+            align-items: center;
+
+        }
+
+        img {
+            border-radius: calc(10px * var(--scale));
+            width: calc(80px * var(--scale));
+            height: calc(80px * var(--scale));
+            margin: calc(10px * var(--scale));
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .details {
+            height: calc(80px * var(--scale));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stats {
+            margin-top: auto;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .avatar {
+            content: var(--avatar-url);
+        }
+
+        .username::before {
+            content: var(--username);
+        }
+
+        .level {
+            width: calc(290px * var(--scale));
+            height: calc(20px * var(--scale));
+            margin-top: auto;
+            border-radius: calc(5px * var(--scale));
+            opacity: 0.8;
+        }
+
+        .level::before {
+            content:"";
+            width:calc(290px * var(--scale));
+            height: calc(20px * var(--scale));
+            position:absolute;
+            border-radius: calc(5px * var(--scale));
+            background-color: var(--primary-color);
+            filter: brightness(0.1);
+        }
+
+        .level .bar {
+            top: calc(2px * var(--scale));
+            margin-left: calc(2px * var(--scale));
+            position: relative;
+            width: auto;
+            height: calc(16px * var(--scale));
+            border-radius: calc(3px * var(--scale));
+            background-color: rgba(0, 0, 0,0);
+        }
+
+        .level .progress {
+            width: 50%;
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: calc(3px * var(--scale));
+            transition: width 0.5s ease-in-out;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="levelcard">
+        <img
+            class="avatar">
+        <div class="details">
+            <h2 class="username" style="margin: 0; color: white;"></h2>
+            <div class="stats">
+            <p style="color: white;">Level 10</p>
+            <p>1500 / 2100 XP</p>
+            </div>
+            <div class="level">
+                <div class="bar">
+                    <div class="progress"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

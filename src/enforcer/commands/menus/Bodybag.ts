@@ -13,7 +13,7 @@ class Bodybag extends BaseCommand {
     }
 
     public async execute(interaction: ContextMenuCommandInteraction): Promise<void> {
-        await interaction.reply({ content: `**${interaction.user.displayName}** ` + Main.getInstance().getRandom("bodybag") + " **(bodybag)**" });
+        await interaction.editReply({ content: `**${interaction.user.displayName}** ` + Main.getInstance().getRandom("bodybag") + " **(bodybag)**" });
     }
 }
 

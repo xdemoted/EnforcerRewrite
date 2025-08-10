@@ -27,7 +27,6 @@ class Waifu extends BaseCommand {
     }
 
     public async execute(interaction: CommandInteraction): Promise<void> {
-        await interaction.deferReply();
         let embedBuilder = new EmbedBuilder();
 
         var num = Math.random();

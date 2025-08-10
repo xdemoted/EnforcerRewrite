@@ -1,7 +1,9 @@
+import { CommandInteraction, GuildMember, Interaction, Message } from "discord.js";
 import { Operator } from "../classes/Operator";
 
 export default class GeneralUtils {
     static modifyNumber(number: number, amount: number, operator: Operator = Operator.ADD) {
+        console.log(`Modifying number: ${number} by ${amount} with operator:`);
         switch (operator) {
             case Operator.ADD:
                 number += amount;
@@ -25,7 +27,35 @@ export default class GeneralUtils {
                 number = amount;
                 break;
         }
+        console.log(`Result after modification: ${number}`);
         return number;
+    }
+
+    static async scheduleDeletion(originalContent: Message | Interaction, time: number) {
+        let message;
+        if (originalContent instanceof Message) {
+            message = originalContent;
+        } else if ((!originalContent.isAutocomplete()) && originalContent.replied) {
+            message = await originalContent.fetchReply();
+        }
+
+        if (message) {
+            setTimeout(() => {
+                message.delete().catch(console.error);
+            }, time);
+        } else {
+            console.warn("No message to delete after scheduling.");
+        }
+    } 
+
+    static getInteractDisplayName(interaction:Interaction) {
+        if (interaction.member && interaction.member instanceof GuildMember) {
+            return interaction.member.displayName;
+        } else if (interaction.user) {
+            return interaction.user.username;
+        } else {
+            return "Unknown"
+        }
     }
 
     static timeSince(epoch: number): number {

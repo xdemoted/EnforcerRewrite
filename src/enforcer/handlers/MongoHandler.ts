@@ -4,6 +4,7 @@ import * as discord from "discord.js";
 import GeneralUtils from "../utils/GeneralUtils";
 import ActiveUser from "../classes/api/mongodb/ActiveUser";
 import Waifu from "../classes/api/Waifu";
+import { Main } from "../Main";
 
 export default class MongoHandler {
     private static instance: MongoHandler;
@@ -15,7 +16,7 @@ export default class MongoHandler {
     }
 
     public async connect(): Promise<void> {
-        const uri = process.env.DB_CONN_STRING;
+        const uri = Main.getVariables().DB_CONN_STRING;
 
         if (!uri) {
             throw new Error("MongoDB URI is not defined in environment variables.");
@@ -24,7 +25,7 @@ export default class MongoHandler {
         const client = new MongoClient(uri);
         try {
             await client.connect();
-            this.database = client.db("enforcer");
+            this.database = client.db(Main.getVariables().DB_NAME);
             this.collections.users = this.database.collection("users");
             this.collections.guilds = this.database.collection("guilds");
             this.collections.waifus = this.database.collection("waifus");
@@ -53,20 +54,31 @@ export default class MongoHandler {
         });
     }
 
+    public async getWaifu(waifuId: number): Promise<Waifu | null> {
+        if (!this.collections.waifus) {
+            throw new Error("Waifus collection is not initialized.");
+        }
+        const waifuDoc = await this.collections.waifus.findOne({ waifuID: waifuId });
+
+        if (!waifuDoc) {
+            return null;
+        }
+
+        return Waifu.fromDocument(waifuDoc) || null;
+    }
+
     public saveUser(document: User): void {
         if ("lastInteract" in document) {
             delete (document as any).lastInteract;
         }
+
         if ("lastUpdated" in document) {
             delete (document as any).lastUpdated;
         }
 
-        if (document.guildsMap) {
-            document.guilds = Object.fromEntries(document.guildsMap);
-            delete (document as any).guildsMap;
+        if ("cds" in document) {
+            delete (document as any).cds;
         }
-
-        console.log(document.guilds);
 
         if (document instanceof User) {
             if (!this.collections.users) {

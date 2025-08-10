@@ -3,4 +3,5 @@ import { CommandInteraction, RESTPostAPIChatInputApplicationCommandsJSONBody, RE
 export default abstract class BaseCommand {
   public abstract getCommand(): RESTPostAPIChatInputApplicationCommandsJSONBody | RESTPostAPIContextMenuApplicationCommandsJSONBody;
   public abstract execute(interaction:CommandInteraction): Promise<void>;
+  public deferReply: boolean = true;
 }

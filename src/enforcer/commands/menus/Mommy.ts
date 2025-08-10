@@ -13,7 +13,7 @@ class Mommy extends BaseCommand {
     }
 
     public async execute(interaction: ContextMenuCommandInteraction): Promise<void> {
-        await interaction.reply({ content: `**${interaction.user.displayName}** ` + Main.getInstance().getRandom("mommy") + " **(mommy)**" });
+        await interaction.editReply({ content: `**${interaction.user.displayName}** ` + Main.getInstance().getRandom("mommy") + " **(mommy)**" });
     }
 }
 

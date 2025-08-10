@@ -1,30 +1,35 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, User, Guild, GuildMember } from "discord.js";
 import BaseCommand from "../classes/BaseCommand";
 import { Main } from "../Main";
-import WaifuRandom from "../classes/api/Waifu";
 
-class ClearChat extends BaseCommand {
+class Lock extends BaseCommand {
 
     public getCommand(): RESTPostAPIChatInputApplicationCommandsJSONBody {
         return new SlashCommandBuilder()
-            .setName("clearchat")
-            .setDescription("Tag Manager")
+            .setName("lock")
+            .setDescription("Toggles bot functionality")
             .setIntegrationTypes([ApplicationIntegrationType.UserInstall])
             .setContexts([InteractionContextType.PrivateChannel, InteractionContextType.Guild])
             .toJSON();
     }
 
     public async execute(interaction: CommandInteraction): Promise<void> {
-        let guilds: Guild[] = Main.getInstance().getClient().guilds.cache.map(guild => guild);
-        let message: string = "";
+        const main = Main.getInstance();
 
-        while (message.length < 2000) {
-            message += "# ‎\n";
+        if (interaction.user.id !== '316243027423395841') {
+            await interaction.editReply({ content: "You are not allowed to use this command." });
+            return;
         }
 
-        interaction.editReply({ content: message.substring(0, 2000) });
+        if (main.getLockdown()) {
+            await interaction.editReply({ content: "The bot has been unlocked, all functionality has been restored." });
+        } else {
+            await interaction.editReply({ content: "The bot has been locked, all functionality has been disabled." });
+        }
+
+        main.toggleLockdown();
         return;
     }
 }
 
-module.exports = new ClearChat();
+module.exports = new Lock();

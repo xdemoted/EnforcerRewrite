@@ -13,7 +13,7 @@ class Smash extends BaseCommand {
     }
 
     public async execute(interaction: ContextMenuCommandInteraction): Promise<void> {
-        await interaction.reply({ content: `**${interaction.user.displayName}** ` + Main.getInstance().getRandom("smash") + " **(smash)**" });
+        await interaction.editReply({ content: `**${interaction.user.displayName}** ` + Main.getInstance().getRandom("smash") + " **(smash)**" });
     }
 }
 

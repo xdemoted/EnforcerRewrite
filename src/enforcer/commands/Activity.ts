@@ -20,8 +20,6 @@ class Activity extends BaseCommand {
     }
 
     public async execute(interaction: CommandInteraction): Promise<void> {
-        await interaction.deferReply();
-
         let activities = Main.getInstance().getActivityHandler()
 
         console.log(activities.songs);

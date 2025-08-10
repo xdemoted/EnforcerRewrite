@@ -18,6 +18,18 @@ export default class XPProfile {
         return level;
     }
 
+    public getLevelProgress(): number {
+        let xp = this.xp.valueOf();
+        let level = 0;
+
+        while (xp >= GeneralUtils.getXPForLevel(level)) {
+            xp -= GeneralUtils.getXPForLevel(level);
+            level++;
+        }
+
+        return xp;
+    }
+
     public getXP(): number {
         return this.xp;
     }

@@ -77,7 +77,7 @@ export default class ActivityHandler {
         if (Date.now() - this.lastSave > 1000 * 60) {
             console.log("Saving data at " + new Date().toLocaleString());
             this.lastSave = Date.now();
-            Main.getInstance().getFileHandler().performDataSave(this);
+            //Main.getInstance().getFileHandler().performDataSave(this);
         }
     }
 }

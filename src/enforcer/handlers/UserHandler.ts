@@ -7,6 +7,7 @@ import MongoHandler from "./MongoHandler";
 export default class UserHandler {
     private static instance: UserHandler;
     private users: Map<string, ActiveUser> = new Map();
+    private userPromises: Map<string, Promise<ActiveUser>> = new Map();
 
     constructor() {
         this.startUserSaveInterval();
@@ -15,50 +16,58 @@ export default class UserHandler {
     async getUser(userID: string): Promise<ActiveUser> {
         if (this.users.has(userID)) {
             return Promise.resolve(this.users.get(userID)!);
-        } else {
+        }
+        if (this.userPromises.has(userID)) {
+            return this.userPromises.get(userID)!;
+        }
+        const userPromise = (async () => {
             try {
                 const user_1 = await Main.getInstance().getClient().users.fetch(userID);
                 const userData = await MongoHandler.getInstance().getUser(user_1);
-                this.users.set(userID, ActiveUser.fromUser(userData));
-                return this.users.get(userID)!;
+                const activeUser = ActiveUser.fromUser(userData);
+                this.users.set(userID, activeUser);
+                return activeUser;
             } catch (error) {
                 console.error(`Error fetching user ${userID}:`, error);
                 throw new Error(`User with ID ${userID} not found.`);
+            } finally {
+                this.userPromises.delete(userID);
             }
-        }
+        })();
+        this.userPromises.set(userID, userPromise);
+        return userPromise;
     }
 
-    giveInteractXP(interact: Message<boolean> | Interaction) {
-        let user;
+    setUser(user: ActiveUser): void {
+        this.users.set(user.userID, user);
+    }
+
+    giveInteractXP(interact: Message<boolean> | Interaction, user: ActiveUser) {
         const guild = interact.guild;
         if (interact instanceof Message) {
             if (interact.channel.isTextBased() && interact.content.length > 5) {
-                user = interact.author;
             } else return;
         } else if (interact instanceof BaseInteraction) {
             if (interact.isCommand() || interact.isButton()) {
-                user = interact.user;
             } else return;
         } else return;
 
-        if (user.bot) return;
+        if (GeneralUtils.timeSince(user.lastInteract) > 60000) { // 1 minute cooldown
+            user.setLastInteract();
 
-        UserHandler.getInstance().getUser(user.id).then((userData) => {
-            if (GeneralUtils.timeSince(userData.lastInteract) > 60000) { // 1 minute cooldown
-                userData.setLastInteract();
+            const randomNum = GeneralUtils.randomNumber(5, 25);
 
-                if (userData.modifyXP(GeneralUtils.randomNumber(5, 25))) {
-                    userData.modifyCurrency(GeneralUtils.randomNumber(1, 3));
-                }
-
-                if (guild) {
-                    const guildProfile = userData.getGuildProfile(guild.id);
-                    if (guildProfile.modifyXP(GeneralUtils.randomNumber(5, 25))) {
-                        guildProfile.modifyCurrency(GeneralUtils.randomNumber(5, 10));
-                    }
-                }                    
+            if (user.modifyXP(randomNum)) {
+                user.modifyCurrency(GeneralUtils.randomNumber(1, 3));
             }
-        })
+
+            if (guild) {
+                const guildProfile = user.getGuildProfile(guild.id);
+                if (guildProfile.modifyXP(randomNum)) {
+                    guildProfile.modifyCurrency(GeneralUtils.randomNumber(5, 10));
+                }
+            }
+        }
     }
 
     startUserSaveInterval(): void {
@@ -70,7 +79,7 @@ export default class UserHandler {
                     this.users.delete(userID);
                 }
             });
-        }, 5*60*1000); // Save every 5 minutes
+        }, Main.getVariables().DEBUG ? Main.getVariables().DEBUG_SAVE_CD : 300000); // Save every 5 minutes
     }
 
     public static getInstance(): UserHandler {
