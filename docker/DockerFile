@@ -3,7 +3,6 @@ FROM ghcr.io/puppeteer/puppeteer:24.16.0
 USER root
 
 RUN         npm install --global npm@latest typescript ts-node @types/node
-RUN addgroup -S container && adduser -S container -G container
 
 USER        container
 ENV         USER=container HOME=/home/container
