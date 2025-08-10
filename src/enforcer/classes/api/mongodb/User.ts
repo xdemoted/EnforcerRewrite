@@ -29,7 +29,6 @@ export default class User extends XPProfile {
         let user = Object.assign(new User(), document);
 
         user.guilds = new Map<string, XPProfile>();
-        user.stats = Object.assign(new stats(), document.stats || {});
 
         for (const [key, value] of Object.entries(document.guilds || {})) {
             user.guilds.set(key, Object.assign(new XPProfile(), value));
