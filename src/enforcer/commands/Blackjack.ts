@@ -58,6 +58,8 @@ class Flip extends BaseCommand {
             deck.push(i % 13) + 1;
         }
 
+        console.log("Deck before shuffle: ", deck);
+
         GeneralUtils.shuffleArray(deck);
 
         playerHand.push(deck.pop() as number);
@@ -70,7 +72,7 @@ class Flip extends BaseCommand {
             .setDescription(`${GeneralUtils.getInteractDisplayName(interaction as Interaction)} gambled ${bet} gems!`)
             .setColor(Colors.Gold)
             .setFields(
-                { name: "Your Hand", value: `${this.getCardName(playerHand[0])} and ${this.getCardName(playerHand[1])}`, inline: true },
+                { name: "Your Hand", value: `${this.displayCardArray(playerHand)}`, inline: true },
                 { name: "Dealer's Hand", value: `${this.getCardName(dealerHand[0])} and ?`, inline: true },
             );
         const row = new ActionRowBuilder<ButtonBuilder>()
@@ -91,8 +93,13 @@ class Flip extends BaseCommand {
         collector.on("collect", async (i: MessageComponentInteraction) => {
             if (i.customId === "hit") {
                 playerHand.push(deck.pop() as number);
-                console.log(playerHand);
                 const playerValue = this.getHandValue(playerHand);
+
+                console.log("Player hand value: ", playerValue);
+                const dealerValue = this.getHandValue(dealerHand);
+                console.log("Dealer hand value: ", dealerValue);
+                console.log("Player hand: ", playerHand);
+                console.log("Dealer hand: ", dealerHand);
 
                 embed.setFields(
                     { name: "Your Hand", value: `${this.displayCardArray(playerHand)}`, inline: true },
@@ -103,8 +110,8 @@ class Flip extends BaseCommand {
                     user.modifyCurrency(-bet);
                     embed.setColor(Colors.Red);
                     await i.update({ content: `${GeneralUtils.getInteractDisplayName(interaction as Interaction)} busted! Lost ${bet} gems.`, embeds: [embed], components: [] });
-                    collector.stop();
                     ended = true;
+                    collector.stop();
                 } else {
                     await i.update({ embeds: [embed] });
                 }
@@ -117,7 +124,7 @@ class Flip extends BaseCommand {
 
                 embed.setFields(
                     { name: "Your Hand", value: `${this.displayCardArray(playerHand)}`, inline: true },
-                    { name: "Dealer's Hand", value: `${this.displayCardArray(playerHand)}`, inline: true },
+                    { name: "Dealer's Hand", value: `${this.displayCardArray(dealerHand)}`, inline: true },
                 );
 
                 if (dealerValue > 21 || playerValue > dealerValue) {
@@ -131,8 +138,8 @@ class Flip extends BaseCommand {
                 } else {
                     await i.update({ content: `${GeneralUtils.getInteractDisplayName(interaction as Interaction)} tied! No gems lost or gained.`, embeds: [embed], components: [] });
                 }
-                collector.stop();
                 ended = true;
+                collector.stop();
             }
         });
 
@@ -144,13 +151,13 @@ class Flip extends BaseCommand {
     }
 
     getCardValue(card: number): number {
-        if (card > 10) return 10; // J, Q, K are worth 10
-        return card; // Aces are worth 1 or 11, handled later
+        if (card + 1 > 10) return 10; // J, Q, K are worth 10
+        return card + 1; // Aces are worth 1 or 11, handled later
     }
 
     getCardName(card: number): string {
         const names = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"];
-        return names[card - 1];
+        return names[card];
     }
 
     getHandValue(hand: number[]): number {
@@ -158,7 +165,7 @@ class Flip extends BaseCommand {
         let aces = 0;
 
         for (const card of hand) {
-            if (card === 1) {
+            if (card === 0) {
                 aces++;
                 value += 11;
             } else {
