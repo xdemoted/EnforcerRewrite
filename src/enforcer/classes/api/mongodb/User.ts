@@ -12,6 +12,7 @@ export default class User extends XPProfile {
 
     public stats: stats = new stats();
 
+    public dailyTokens: number = 50;
     public displayname: string = "";
     public username: string = "";
     public userID: string = "";
@@ -42,12 +43,11 @@ export default class User extends XPProfile {
         user.displayname = displayname;
         user.username = username;
         user.userID = userID;
-        user.xp = 0;
         return user;
     }
 }
 
-class stats {
+export class stats {
     totalMessages: number = 0;
     commandsSent: number = 0;
     gamesWon: number = 0;

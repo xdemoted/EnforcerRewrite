@@ -6,6 +6,7 @@ import EventHandler from "./handlers/EventHandler";
 import MongoHandler from "./handlers/MongoHandler";
 import dotenv from "dotenv";
 import path from "path";
+import { dir } from "console";
 
 require('@dotenvx/dotenvx').config()
 process.chdir("./src/enforcer");
@@ -109,7 +110,11 @@ export class Main {
             let command = require(`${directory}/${file}`);
 
             if (command instanceof BaseCommand) {
-            this.commands.push(command);
+                this.commands.push(command);
+
+                if (directory.includes("restricted")) {
+                    command.restricted = true;
+                }
             }
         });
     }

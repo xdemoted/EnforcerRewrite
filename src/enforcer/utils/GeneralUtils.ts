@@ -63,6 +63,7 @@ export default class GeneralUtils {
     }
 
     static randomNumber(min: number, max: number): number {
+        if (min > max) return max;
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
@@ -105,6 +106,14 @@ export default class GeneralUtils {
             }
         }
         return map;
+    }
+
+    public static shuffleArray<T>(array: T[]): T[] {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
     }
 }
 
@@ -154,3 +163,57 @@ export class SearchMap<K, V> extends Map {
         return keys;
     }
 }
+
+export class Time {
+    static HOUR = 60 * 60 * 1000;
+    static MINUTE = 60 * 1000;
+    static SECOND = 1000;
+
+    public milliseconds: number;
+
+    public days: number;
+    public hours: number;
+    public minutes: number;
+    public seconds: number;
+
+    constructor(milliseconds: number) {
+        this.milliseconds = milliseconds;
+
+        this.days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
+        this.hours = Math.floor(milliseconds / (1000 * 60 * 60) % 24);
+        this.minutes = Math.floor((milliseconds / (1000 * 60) % 60));
+        this.seconds = Math.floor((milliseconds / 1000) % 60);
+    }
+
+    public value(): number {
+        return this.milliseconds;
+    }
+
+    public static timeLeft(end: number, currentTime?: number): Time {
+        let timeLeft = end - (currentTime || Date.now());
+
+        if (timeLeft < 0) {
+            timeLeft = 0;
+        }
+
+        return new Time(timeLeft);
+    }
+
+    public formatDuration(): string {
+        const parts = [];
+        if (this.days > 0) parts.push(`${this.days}d`);
+        if (this.hours > 0) parts.push(`${this.hours}h`);
+        if (this.minutes > 0) parts.push(`${this.minutes}m`);
+        if (this.seconds > 0) parts.push(`${this.seconds}s`);
+        return parts.join(' ') || '0s';
+    }
+}
+
+/*
+ const timeLeft = 18 * 60 * 60 * 1000 - (Date.now() - user.stats.lastDaily);
+            const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            await interaction.editReply({content:`You can claim your daily reward in ${hours}h ${minutes}m ${seconds}s.`});
+            deleteAfter = 10 * 1000;
+*/

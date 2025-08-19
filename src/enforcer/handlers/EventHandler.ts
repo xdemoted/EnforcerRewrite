@@ -24,6 +24,11 @@ export default class EventHandler {
 
             if (command) {
                 try {
+                    if (command.restricted && interaction.user.id !== '316243027423395841') {
+                        await interaction.reply({ content: "You are not allowed to use this command.", ephemeral: true });
+                        return;
+                    }
+
                     if (command.deferReply) await interaction.deferReply();
 
                     command.execute(interaction);

@@ -1,6 +1,6 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, User, Guild, GuildMember } from "discord.js";
-import BaseCommand from "../classes/BaseCommand";
-import { Main } from "../Main";
+import BaseCommand from "../../classes/BaseCommand";
+import { Main } from "../../Main";
 
 class Lock extends BaseCommand {
 

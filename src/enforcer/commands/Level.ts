@@ -30,7 +30,9 @@ class Level extends BaseCommand {
             level: user.getLevel(),
             xp: user.getLevelProgress(),
             xp_required: GeneralUtils.getXPForLevel(user.getLevel() + 1)
-          }
+          },
+          puppeteerArgs: {
+            args: ['--no-sandbox', '--disable-setuid-sandbox']}
         });
 
         
