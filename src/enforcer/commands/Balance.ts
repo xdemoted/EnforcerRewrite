@@ -9,7 +9,7 @@ class Stats extends BaseCommand {
         return new SlashCommandBuilder()
             .setName("balance")
             .setDescription("display user balance")
-            .setIntegrationTypes([ApplicationIntegrationType.UserInstall])
+            .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
             .setContexts([InteractionContextType.PrivateChannel, InteractionContextType.Guild])
             .toJSON();
     }

@@ -9,6 +9,7 @@ import { UserRating } from "../classes/api/mongodb/User";
 import Waifu from "../classes/api/Waifu";
 import { Rating } from "../classes/Rating";
 import { json } from "stream/consumers";
+import GeneralUtils from "../utils/GeneralUtils";
 
 class Gallery extends BaseCommand {
     static app = express();
@@ -26,7 +27,7 @@ class Gallery extends BaseCommand {
             .setName("gallery")
             .setDescription("List all your waifus.")
             .addUserOption(option => option.setName("user").setDescription("The user gallery to display.").setRequired(false))
-            .setIntegrationTypes([ApplicationIntegrationType.UserInstall])
+            .setIntegrationTypes([ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall])
             .setContexts([InteractionContextType.PrivateChannel, InteractionContextType.Guild])
             .toJSON();
     }
@@ -53,20 +54,12 @@ class Gallery extends BaseCommand {
         Gallery.app.get('/gallery/' + user.userID, (req, res) => {
             fs.readFile("./web/index.html", 'utf8', (err: any, data: string) => {
                 if (err) return res.status(500).send(err);
-                let lines = data.split('\n')
 
-                let waifuRow = lines.findIndex(line => line.includes("waifurow"))
-                let start = lines.slice(0, waifuRow + 1)
-                let end = lines.slice(waifuRow + 1, lines.length)
+                data = data.replaceAll(/\.\/assets\//g, "/");
 
-                start.push(...mongoWaifus.map(waifu => this.card
-                    .replace("imageURL", waifu.waifu.url)
-                    .replace("waifucard", waifu.waifu.rating == Rating.SAFE ? "waifucard" : "waifucard explicit")
-                    .replace("rating", waifu.rating == UserRating.MOMMY ? "Mommy" : waifu.rating == UserRating.SMASH ? "Smash" : waifu.rating == UserRating.PASS ? "Pass" : waifu.rating == UserRating.BODYBAG ? "Bodybag" : "Unknown")
-                ));
-                const modifiedHtml = start.join('\n').replace('userName', discordUser.displayName).replace("waifuData", JSON.stringify(htmlWaifus)) + end.join('\n');
+                GeneralUtils.replaceHTMLVariables(data, { userName: discordUser.displayName, waifuData: JSON.stringify(htmlWaifus) })
 
-                res.send(modifiedHtml);
+                res.send(data);
             });
         })
 

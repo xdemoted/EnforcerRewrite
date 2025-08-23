@@ -12,7 +12,7 @@ class Daily extends BaseCommand {
         return new SlashCommandBuilder()
             .setName("daily")
             .setDescription("You're ministry authorized daily reward")
-            .setIntegrationTypes([ApplicationIntegrationType.UserInstall, ApplicationIntegrationType.GuildInstall])
+            .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
             .setContexts([InteractionContextType.PrivateChannel, InteractionContextType.Guild])
             .toJSON();
     }

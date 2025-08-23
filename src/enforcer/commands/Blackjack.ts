@@ -22,7 +22,7 @@ class Flip extends BaseCommand {
                     .setRequired(true)
                     .setMinValue(10)
             )
-            .setIntegrationTypes([ApplicationIntegrationType.UserInstall])
+            .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
             .setContexts([InteractionContextType.PrivateChannel, InteractionContextType.Guild])
             .toJSON();
     }
@@ -67,6 +67,31 @@ class Flip extends BaseCommand {
         playerHand.push(deck.pop() as number);
         dealerHand.push(deck.pop() as number);
 
+        if (this.getHandValue(playerHand) === 21) {
+            if (this.getHandValue(dealerHand) === 21) {
+                const embed = new EmbedBuilder()
+                    .setTitle("Blackjack")
+                    .setDescription(`${GeneralUtils.getInteractDisplayName(interaction as Interaction)} gambled ${bet} gems!`)
+                    .setColor(Colors.Gold)
+                    .setFields(
+                        { name: "Your Hand", value: `${this.displayCardArray(playerHand)}`, inline: true },
+                        { name: "Dealer's Hand", value: `${this.displayCardArray(dealerHand)}`, inline: true },
+                    );
+                await interaction.reply({ content: `Both you and the dealer have blackjack! It's a tie! No gems lost or gained.`, embeds: [embed], components: [] });
+            } else {
+                user.modifyCurrency(Math.round(bet * 1.5));
+                const embed = new EmbedBuilder()
+                    .setTitle("Blackjack")
+                    .setDescription(`${GeneralUtils.getInteractDisplayName(interaction as Interaction)} gambled ${bet} gems!`)
+                    .setColor(Colors.Gold)
+                    .setFields(
+                        { name: "Your Hand", value: `${this.displayCardArray(playerHand)}`, inline: true },
+                        { name: "Dealer's Hand", value: `${this.displayCardArray(dealerHand)} and ?`, inline: true },
+                    );
+                await interaction.reply({ content: `Blackjack! You win! Gained ${bet} gems.`, embeds: [embed], components: [] });
+            }
+        }
+
         const embed = new EmbedBuilder()
             .setTitle("Blackjack")
             .setDescription(`${GeneralUtils.getInteractDisplayName(interaction as Interaction)} gambled ${bet} gems!`)
@@ -94,25 +119,24 @@ class Flip extends BaseCommand {
             if (i.customId === "hit") {
                 playerHand.push(deck.pop() as number);
                 const playerValue = this.getHandValue(playerHand);
-
-                console.log("Player hand value: ", playerValue);
                 const dealerValue = this.getHandValue(dealerHand);
-                console.log("Dealer hand value: ", dealerValue);
-                console.log("Player hand: ", playerHand);
-                console.log("Dealer hand: ", dealerHand);
-
-                embed.setFields(
-                    { name: "Your Hand", value: `${this.displayCardArray(playerHand)}`, inline: true },
-                    { name: "Dealer's Hand", value: `${this.getCardName(dealerHand[0])} and ?`, inline: true },
-                );
 
                 if (playerValue > 21) {
                     user.modifyCurrency(-bet);
                     embed.setColor(Colors.Red);
+                    embed.setFields(
+                        { name: "Your Hand", value: `${this.displayCardArray(playerHand)}`, inline: true },
+                        { name: "Dealer's Hand", value: `${this.displayCardArray(dealerHand)}`, inline: true },
+                    );
                     await i.update({ content: `${GeneralUtils.getInteractDisplayName(interaction as Interaction)} busted! Lost ${bet} gems.`, embeds: [embed], components: [] });
                     ended = true;
                     collector.stop();
                 } else {
+                    embed.setFields(
+                        { name: "Your Hand", value: `${this.displayCardArray(playerHand)}`, inline: true },
+                        { name: "Dealer's Hand", value: `${this.getCardName(dealerHand[0])} and ?`, inline: true },
+                    );
+
                     await i.update({ embeds: [embed] });
                 }
             } else if (i.customId === "stand") {

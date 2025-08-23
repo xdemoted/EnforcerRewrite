@@ -21,7 +21,7 @@ class Flip extends BaseCommand {
                     .setRequired(true)
                     .setMinValue(10)
             )
-            .setIntegrationTypes([ApplicationIntegrationType.UserInstall])
+            .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
             .setContexts([InteractionContextType.PrivateChannel, InteractionContextType.Guild])
             .toJSON();
     }

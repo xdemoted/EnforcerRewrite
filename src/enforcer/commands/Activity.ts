@@ -14,7 +14,7 @@ class Activity extends BaseCommand {
                     .setDescription("User to get activity from")
                     .setRequired(false)
             )
-            .setIntegrationTypes([ApplicationIntegrationType.UserInstall])
+            .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
             .setContexts([InteractionContextType.PrivateChannel, InteractionContextType.Guild])
             .toJSON();
     }

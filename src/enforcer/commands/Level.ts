@@ -12,7 +12,7 @@ class Level extends BaseCommand {
         return new SlashCommandBuilder()
             .setName("level")
             .setDescription("Display your level card.")
-            .setIntegrationTypes([ApplicationIntegrationType.UserInstall])
+            .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
             .setContexts([InteractionContextType.PrivateChannel, InteractionContextType.Guild])
             .toJSON();
     }

@@ -2,6 +2,16 @@ import { CommandInteraction, GuildMember, Interaction, Message } from "discord.j
 import { Operator } from "../classes/Operator";
 
 export default class GeneralUtils {
+    static replaceHTMLVariables(html: string, variables: {[key: string]: string | number}): string {
+        console.log(variables)
+        for (const key in variables) {
+            const regex = new RegExp(`{{${key}}}`, 'g');
+            html = html.replace(regex, String(variables[key]));
+        }
+        console.log(html);
+        return html;
+    }
+
     static modifyNumber(number: number, amount: number, operator: Operator = Operator.ADD) {
         console.log(`Modifying number: ${number} by ${amount} with operator:`);
         switch (operator) {
@@ -209,11 +219,3 @@ export class Time {
     }
 }
 
-/*
- const timeLeft = 18 * 60 * 60 * 1000 - (Date.now() - user.stats.lastDaily);
-            const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-            await interaction.editReply({content:`You can claim your daily reward in ${hours}h ${minutes}m ${seconds}s.`});
-            deleteAfter = 10 * 1000;
-*/
