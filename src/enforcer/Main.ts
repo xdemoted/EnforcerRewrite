@@ -1,15 +1,15 @@
-import { Client, Partials, REST, Routes } from "discord.js";
-import BaseCommand from "./classes/BaseCommand";
+import { Client, Partials, REST, RESTPostAPIPrimaryEntryPointApplicationCommandJSONBody, Routes } from "discord.js";
+import BaseCommand from "src/enforcer/classes/BaseCommand";
 import fs from "fs";
-import ActivityHandler from "./stat-tracking/ActivityHandler";
-import EventHandler from "./handlers/EventHandler";
-import MongoHandler from "./handlers/MongoHandler";
+import ActivityHandler from "src/enforcer/stat-tracking/ActivityHandler";
+import EventHandler from "src/enforcer/handlers/EventHandler";
+import MongoHandler from "src/enforcer/handlers/MongoHandler";
 import dotenv from "dotenv";
 import path from "path";
 import { dir } from "console";
+import WebHandler from "./handlers/WebHandler";
 
 require('@dotenvx/dotenvx').config()
-process.chdir("./src/enforcer");
 
 export class Main {
     private static instance: Main = new Main();
@@ -34,6 +34,7 @@ export class Main {
 
             this.loadCommands();
             this.registerCommands();
+            this.startWebHandler();
 
             this.eventHandler = new EventHandler(this);
         });
@@ -76,6 +77,9 @@ export class Main {
         return this.lockdown;
     }
 
+    startWebHandler(): void {
+        WebHandler.getInstance();
+    }
 
     getActivityHandler(): ActivityHandler {
         return this.activityHandler;
@@ -121,7 +125,7 @@ export class Main {
 
     loadCommands() {
         console.log("Loading commands:");
-        this.loadDirectory("./commands");
+        this.loadDirectory("src/enforcer/commands");
     }
 
     registerCommands() {
@@ -131,7 +135,7 @@ export class Main {
             try {
                 await rest.put(
                     Routes.applicationCommands(this.client.user?.id || ''),
-                    { body: this.commands.map(command => command.getCommand()) },
+                    { body: [...this.commands.map(command => command.getCommand()), {name: "launch", type: 4} as any] },
                 );
             } catch (error) {
                 console.error(error);
@@ -177,6 +181,7 @@ export class Main {
 }
 
 interface Env {
+    APP_PORT: number | undefined;
     DB_CONN_STRING: string | undefined;
     DB_NAME: string | undefined;
     DEBUG: boolean | undefined;

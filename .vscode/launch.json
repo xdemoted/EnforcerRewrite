@@ -9,9 +9,10 @@
             "type": "node",
             "request": "launch",
             "name": "Run Main",
-            "runtimeExecutable": "ts-node",
+            "runtimeExecutable": "npm",
             "args": [
-            "${workspaceFolder}\\src\\enforcer\\Main.ts"
+            "run",
+            "start"
             ],
             "skipFiles": [
             "<node_internals>/**"

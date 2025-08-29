@@ -5,7 +5,7 @@
     "main": "src/enforcer/Main",
     "scripts": {
         "build": "tsc",
-        "start": "ts-node src/enforcer/Main",
+        "start": "ts-node -r tsconfig-paths/register src/enforcer/Main",
         "test": "jest"
     },
     "dependencies": {
@@ -17,6 +17,7 @@
         "node-fetch": "^3.3.2",
         "node-html-to-image": "^5.0.0",
         "ts-node": "^10.9.2",
+        "tsconfig-paths": "^4.2.0",
         "typescript": "^5.7.3"
     },
     "devDependencies": {

@@ -2,12 +2,12 @@ import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInpu
 import BaseCommand from "../../classes/BaseCommand";
 import { Main } from "../../Main";
 import WaifuRandom from "../../classes/api/Waifu";
-import UserHandler from "src/enforcer/handlers/UserHandler";
-import { Operator } from "src/enforcer/classes/Operator";
-import User, { stats } from "src/enforcer/classes/api/mongodb/User";
-import ActiveUser from "src/enforcer/classes/api/mongodb/ActiveUser";
+import UserHandler from "../../handlers/UserHandler";
+import { Operator } from "../../classes/Operator";
+import User, { stats } from "../../classes/api/mongodb/User";
+import ActiveUser from "../../classes/api/mongodb/ActiveUser";
 
-class ClearChat extends BaseCommand {
+class Admin extends BaseCommand {
     private resetChoices = ["daily", "currency", "xp", "stats", "all"];
 
     public getCommand(): RESTPostAPIChatInputApplicationCommandsJSONBody {
@@ -31,7 +31,7 @@ class ClearChat extends BaseCommand {
                                 { name: "set", value: "set" }
                             )
                     )
-                    .addStringOption(option =>
+                    .addUserOption(option =>
                         option.setName("user")
                             .setDescription("User to modify")
                             .setRequired(true)
@@ -57,6 +57,17 @@ class ClearChat extends BaseCommand {
                         option.setName("user")
                             .setDescription("User to reset data for")
                             .setRequired(false)
+                    )
+            )
+            .addSubcommand(subcommand =>
+                subcommand.setName("sendservermessage")
+                    .setDescription("Send a message used for user setup")
+                    .addStringOption(option =>
+                        option.setName("message")
+                            .setDescription("Message to broadcast")
+                            .addChoices(
+                                { name: "Ping Setup", value: "ping" }
+                            )
                     )
             )
             .addSubcommandGroup(subcommand =>
@@ -89,7 +100,8 @@ class ClearChat extends BaseCommand {
                             )
                     )
             )
-            .setIntegrationTypes([ApplicationIntegrationType.UserInstall])
+            .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
+            .setDefaultMemberPermissions(0)
             .setContexts([InteractionContextType.PrivateChannel, InteractionContextType.Guild])
             .toJSON();
     }
@@ -107,6 +119,7 @@ class ClearChat extends BaseCommand {
             case "reset":
                 this.resetData(interaction);
                 break;
+            case "sendservermessage":
             case "toggle":
             case "status":
             case "adduser":
@@ -132,7 +145,7 @@ class ClearChat extends BaseCommand {
 
     public manageCurrency(interaction: CommandInteraction): void {
         const action = (interaction as ChatInputCommandInteraction).options.getString("action", true);
-        const userId = (interaction as ChatInputCommandInteraction).options.getString("user", true);
+        const discordUser = (interaction as ChatInputCommandInteraction).options.getUser("user", true);
         const amount = (interaction as ChatInputCommandInteraction).options.getInteger("amount", true);
 
         if (!["add", "remove", "set"].includes(action)) {
@@ -145,7 +158,7 @@ class ClearChat extends BaseCommand {
             return;
         }
 
-        UserHandler.getInstance().getUser(userId).then(user => {
+        UserHandler.getInstance().getUser(discordUser.id).then(user => {
             if (!user) {
                 interaction.editReply({ content: "User not found." });
                 return;
@@ -154,15 +167,15 @@ class ClearChat extends BaseCommand {
             switch (action) {
                 case "add":
                     user.modifyCurrency(amount);
-                    interaction.editReply({ content: `Added ${amount} gems to <@${userId}>. They now have ${user.getCurrency()} gems.` });
+                    interaction.editReply({ content: `Added ${amount} gems to <@${discordUser.id}>. They now have ${user.getCurrency()} gems.` });
                     break;
                 case "remove":
                     user.modifyCurrency(amount, Operator.SUBTRACT);
-                    interaction.editReply({ content: `Removed ${amount} gems from <@${userId}>. They now have ${user.getCurrency()} gems.` });
+                    interaction.editReply({ content: `Removed ${amount} gems from <@${discordUser.id}>. They now have ${user.getCurrency()} gems.` });
                     break;
                 case "set":
                     user.modifyCurrency(amount, Operator.SET);
-                    interaction.editReply({ content: `Set <@${userId}>'s gems to ${amount}.` });
+                    interaction.editReply({ content: `Set <@${discordUser.id}>'s gems to ${amount}.` });
                     break;
             }
         }).catch(err => {
@@ -255,4 +268,4 @@ class ClearChat extends BaseCommand {
     }
 }
 
-module.exports = new ClearChat();
+module.exports = new Admin();

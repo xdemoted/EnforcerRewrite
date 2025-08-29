@@ -10,14 +10,14 @@ import Waifu from "../classes/api/Waifu";
 import { Rating } from "../classes/Rating";
 import { json } from "stream/consumers";
 import GeneralUtils from "../utils/GeneralUtils";
+import HTMLUtils from "../utils/HTMLUtils";
+import WebHandler from "../handlers/WebHandler";
 
 class Gallery extends BaseCommand {
-    static app = express();
+    static app = WebHandler.getInstance().getApp();
 
     constructor() {
         super();
-        Gallery.app.listen(25551);
-        Gallery.app.use(express.static("./web/assets/"));
     }
 
     private card = `<div class="waifucard" style="background-image: url(imageURL); background-size: 100% 100%;"><div class="waifuDetails"><h2>rating</h2></div></div>`
@@ -57,7 +57,7 @@ class Gallery extends BaseCommand {
 
                 data = data.replaceAll(/\.\/assets\//g, "/");
 
-                GeneralUtils.replaceHTMLVariables(data, { userName: discordUser.displayName, waifuData: JSON.stringify(htmlWaifus) })
+                HTMLUtils.fillTemplate(data, { userName: discordUser.displayName, waifuData: JSON.stringify(htmlWaifus) })
 
                 res.send(data);
             });

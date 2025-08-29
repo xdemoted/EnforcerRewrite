@@ -67,6 +67,21 @@ export default class MongoHandler {
         return Waifu.fromDocument(waifuDoc) || null;
     }
 
+    public async getWaifuFromURL(url: string): Promise<Waifu | null> {
+        if (!this.collections.waifus) {
+            throw new Error("Waifus collection is not initialized.");
+        }
+        return this.collections.waifus.findOne({
+            url: url
+        }).then(waifuDoc => {
+            if (!waifuDoc) {
+                return null;
+            }
+
+            return Waifu.fromDocument(waifuDoc) || null;
+        });
+    }
+
     public saveUser(document: User): void {
         if ("lastInteract" in document) {
             delete (document as any).lastInteract;

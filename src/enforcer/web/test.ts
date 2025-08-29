@@ -1,11 +1,7 @@
-import fs from "fs";
+import WebHandler from "../handlers/WebHandler";
 
-let html = fs.readFileSync("./src/enforcer/web/test.txt", 'utf8')
+new WebHandler()
 
-console.log(html);
-let str = "./assets/data"
-
-let regex = /\.\/assets\//g
-str = str.replaceAll(regex, "/")
-
-console.log(str);
+setTimeout(() => {
+    // Keep Alive
+}, 30000);

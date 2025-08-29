@@ -2,7 +2,7 @@ import { CommandInteraction, GuildMember, Interaction, Message } from "discord.j
 import { Operator } from "../classes/Operator";
 
 export default class GeneralUtils {
-    static replaceHTMLVariables(html: string, variables: {[key: string]: string | number}): string {
+    static replaceHTMLVariables(html: string, variables: { [key: string]: string | number }): string {
         console.log(variables)
         for (const key in variables) {
             const regex = new RegExp(`{{${key}}}`, 'g');
@@ -56,9 +56,9 @@ export default class GeneralUtils {
         } else {
             console.warn("No message to delete after scheduling.");
         }
-    } 
+    }
 
-    static getInteractDisplayName(interaction:Interaction) {
+    static getInteractDisplayName(interaction: Interaction) {
         if (interaction.member && interaction.member instanceof GuildMember) {
             return interaction.member.displayName;
         } else if (interaction.user) {
@@ -108,7 +108,7 @@ export default class GeneralUtils {
         return Math.floor(5 * Math.pow(level, 2) + 50 * level + 100);
     }
 
-    public static convertToMap<K>(keyObject: {[key: string]: K}): Map<string, K> {
+    public static convertToMap<K>(keyObject: { [key: string]: K }): Map<string, K> {
         const map = new Map<string, K>();
         for (const key in keyObject) {
             if (keyObject.hasOwnProperty(key)) {
@@ -124,6 +124,16 @@ export default class GeneralUtils {
             [array[i], array[j]] = [array[j], array[i]];
         }
         return array;
+    }
+
+    public static setArray(array: Object[], value: Object, key: string) {
+        for (let i = 0; i < array.length; i++) {
+            if ((array[i] as any)[key] === (value as any)[key]) {
+                array[i] = value;
+                return;
+            }
+        }
+        array.push(value);
     }
 }
 
