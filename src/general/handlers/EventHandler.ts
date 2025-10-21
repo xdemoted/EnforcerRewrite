@@ -1,18 +1,19 @@
 import { Message, MessageFlags } from "discord.js";
-import { Main } from "../Main";
-import UserHandler from "./UserHandler";
-import GeneralUtils from "../utils/GeneralUtils";
+import { Main } from "../../enforcer/Main";
+import UserHandler from "../../enforcer/handlers/UserHandler";
+import GeneralUtils from "src/general/utils/GeneralUtils";
+import GenericBot from "src/general/classes/GenericBot";
 
 export default class EventHandler {
 
-    constructor(main: Main) {
+    constructor(main: GenericBot) {
         this.startMessageListener(main);
-        this.startPresenceListener(main);
         this.startCommandListener(main);
     }
 
-    startCommandListener(main: Main) {
+    startCommandListener(main: GenericBot) {
         main.getClient().on('interactionCreate', async interaction => {
+            console.log("Received")
             if (main.getLockdown()&&!main.getAllowedUsers().includes(interaction.user.id)&& !interaction.isAutocomplete()) {
                 await interaction.reply({ content: "The bot has been locked by a Ministry official, interaction has been forbidden.", flags: MessageFlags.Ephemeral });
                 return;
@@ -33,10 +34,12 @@ export default class EventHandler {
 
                     command.execute(interaction);
 
+                    /* TODO Reenable XP system
                     UserHandler.getInstance().getUser(interaction.user.id).then(user => {
                         UserHandler.getInstance().giveInteractXP(interaction,user);
                         user.stats.commandsSent += 1;
                     });
+                    */
                 } catch (error) {
                     console.error("Man this shit is fucked: " + command.getCommand().name)
                 }
@@ -44,7 +47,7 @@ export default class EventHandler {
         });
     }
 
-    startMessageListener(main: Main): void {
+    startMessageListener(main: GenericBot): void {
         Main.getInstance().getClient().on('messageCreate', (message) => {
             if (main.getLockdown()&&!main.getAllowedUsers().includes(message.author.id)) return;
 
@@ -52,18 +55,6 @@ export default class EventHandler {
                 UserHandler.getInstance().giveInteractXP(message, user);
                 user.stats.totalMessages += 1
             })
-        });
-    }
-
-    startPresenceListener(main: Main): void {
-        main.getClient().on('presenceUpdate', (oldPresence, presence) => {
-            if (main.getLockdown()&&!main.getAllowedUsers().includes(presence.userId)) return;
-
-            console.log(`Presence update for user: ${presence.userId}`);
-            let member = presence?.member
-            if (member) {
-                main.getActivityHandler().processMember(member);
-            }
         });
     }
 }

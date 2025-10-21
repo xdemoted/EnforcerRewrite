@@ -5,7 +5,7 @@
     "main": "src/enforcer/Main",
     "scripts": {
         "build": "tsc",
-        "start": "ts-node -r tsconfig-paths/register src/enforcer/Main",
+        "start": "ts-node -r tsconfig-paths/register src/general/Index.ts",
         "test": "jest"
     },
     "dependencies": {

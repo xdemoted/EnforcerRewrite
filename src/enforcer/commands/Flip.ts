@@ -1,13 +1,13 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, User, Guild, GuildMember, MessageFlags, Interaction } from "discord.js";
-import BaseCommand from "../classes/BaseCommand";
+import BaseCommand from "../../general/classes/BaseCommand";
 import { Main } from "../Main";
-import WaifuRandom from "../classes/api/Waifu";
+import WaifuRandom from "../../general/classes/api/Waifu";
 import UserHandler from "../handlers/UserHandler";
-import GeneralUtils from "../utils/GeneralUtils";
+import GeneralUtils from "src/general/utils/GeneralUtils";
 
 class Flip extends BaseCommand {
-    private tailsURL = "https://files.catbox.moe/mfnic9.gif"
-    private headsURL = "https://files.catbox.moe/ev0osf.gif";
+    private tailsURL = "http://panel.wolf-co.com:25551/tails.gif"
+    private headsURL = "http://panel.wolf-co.com:25551/heads.gif";
 
     public deferReply: boolean = false;
 
@@ -65,8 +65,8 @@ class Flip extends BaseCommand {
         interaction.reply({ embeds: [embed] });
 
         setTimeout(() => {
-            interaction.editReply({ content: `${GeneralUtils.getInteractDisplayName(interaction as Interaction)} flipped ${bet} gems and got ${result}!`, embeds: [] });
-        }, 30 * 60 * 1000);
+            interaction.editReply({ content: `${GeneralUtils.getInteractDisplayName(interaction as Interaction)} flipped ${bet} gems and got ${result}! <a:${result ? "heads:1411059828264009850" : "tails:1411059876058107975"}>`, embeds: [] });
+        }, 20 * 1000);
     }
 }
 

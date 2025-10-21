@@ -1,11 +1,10 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, User as DiscordUser, Guild, GuildMember, ChatInputCommandInteraction, CommandInteractionOption } from "discord.js";
-import BaseCommand from "../../classes/BaseCommand";
+import BaseCommand from "../../../general/classes/BaseCommand";
 import { Main } from "../../Main";
-import WaifuRandom from "../../classes/api/Waifu";
 import UserHandler from "../../handlers/UserHandler";
-import { Operator } from "../../classes/Operator";
-import User, { stats } from "../../classes/api/mongodb/User";
-import ActiveUser from "../../classes/api/mongodb/ActiveUser";
+import { Operator } from "../../../general/classes/Operator";
+import User, { stats } from "../../../general/classes/api/mongodb/User";
+import ActiveUser from "../../../general/classes/api/mongodb/ActiveUser";
 
 class Admin extends BaseCommand {
     private resetChoices = ["daily", "currency", "xp", "stats", "all"];

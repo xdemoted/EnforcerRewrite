@@ -1,10 +1,10 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, GuildMember, Guild } from "discord.js";
-import BaseCommand from "../classes/BaseCommand";
+import BaseCommand from "../../general/classes/BaseCommand";
 import { Main } from "../Main";
 import fs from "fs";
-import RandomWaifu from "../classes/api/Waifu";
+import RandomWaifu from "../../general/classes/api/Waifu";
 import UserHandler from "../handlers/UserHandler";
-import { UserRating } from "../classes/api/mongodb/User";
+import { UserRating } from "../../general/classes/api/mongodb/User";
 import MongoHandler from "../handlers/MongoHandler";
 
 class Waifu extends BaseCommand {

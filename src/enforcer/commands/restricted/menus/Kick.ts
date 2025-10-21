@@ -1,7 +1,6 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, GuildMember, EmbedBuilder, ContextMenuCommandBuilder, ApplicationCommandType, RESTPostAPIContextMenuApplicationCommandsJSONBody, ContextMenuCommandInteraction } from "discord.js";
-import BaseCommand from "src/enforcer/classes/BaseCommand";
+import BaseCommand from "src/general/classes/BaseCommand";
 import { Main } from "src/enforcer/Main";
-import ActivityMethods, { UserActivity } from "src/enforcer/utils/ActivityMethods";
 
 class Activity extends BaseCommand {
     public getCommand(): RESTPostAPIContextMenuApplicationCommandsJSONBody {

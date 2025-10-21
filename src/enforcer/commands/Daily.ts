@@ -1,10 +1,10 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, User, Guild, GuildMember, Interaction } from "discord.js";
-import BaseCommand from "../classes/BaseCommand";
+import BaseCommand from "../../general/classes/BaseCommand";
 import { Main } from "../Main";
-import WaifuRandom from "../classes/api/Waifu";
-import GeneralUtils, { Time } from "../utils/GeneralUtils";
+import WaifuRandom from "../../general/classes/api/Waifu";
+import GeneralUtils, { Time } from "src/general/utils/GeneralUtils";
 import UserHandler from "../handlers/UserHandler";
-import ActiveUser from "../classes/api/mongodb/ActiveUser";
+import ActiveUser from "../../general/classes/api/mongodb/ActiveUser";
 
 class Daily extends BaseCommand {
 

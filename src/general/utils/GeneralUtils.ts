@@ -41,6 +41,71 @@ export default class GeneralUtils {
         return number;
     }
 
+    static convertTo24Hour(timeStr: string): number {
+        console.log(timeStr.length)
+        if (timeStr.length <= 2) {
+            const number = parseInt(timeStr);
+            if (isNaN(number) || number < 0 || number > 23) {
+                throw new Error(`The number ${number} obtained from ${timeStr} is not a valid hour (0-23).`);
+            }
+            return number;
+        }
+        const match = timeStr.match(/^(\d{1,2})(am|pm)?$/);
+        
+        if (!match) {
+            throw new Error(`Time string "${timeStr}" is not in a recognized format. Use formats like "7am", "12pm", or "3".`);
+        }
+
+        const hour = parseInt(match[1]);
+        const period = match[2];
+
+        if (isNaN(hour) || hour < 1 || hour > 12) {
+            throw new Error(`The hour ${hour} obtained from ${timeStr} is not valid. It should be between 1 and 12.`);
+        }
+
+        if (period) {
+            if (period === "am") {
+                return hour === 12 ? 0 : hour; // 12am is 0 hours
+            } else if (period === "pm") {
+                return hour === 12 ? 12 : hour + 12; // 12pm is 12 hours
+            }
+        }
+
+        return hour;
+    }
+
+
+    static parseHourString(timeString: string): { blocks: {start: number, end: number}[], overlap: boolean } {
+        if (timeString.includes(":")) {
+            throw new Error("Time strings are only accurate to the hour. (e.g., 7am, 12pm, 3am)");
+        }
+
+        const timeRanges = timeString.split("&").map(range => range.trim());
+        const mappedRanges: { start: number, end: number }[] = timeRanges.map(range => {
+            const [startStr, endStr] = range.split(/-|\.{2}/).map(part => part.trim().toLowerCase());
+            const start = this.convertTo24Hour(startStr);
+            const end = this.convertTo24Hour(endStr);
+
+            if (start > end) {
+                throw new Error(`Invalid time range: "${range}". Start time must be less than or equal to end time.`);
+            }
+
+            return { start, end };
+        });
+
+        let hours: number[] = [];
+        let overlap = false;
+
+        for (const range of mappedRanges) {
+            for (let hour = range.start; hour <= range.end; hour++) {
+                if (!hours.includes(hour)) hours.push(hour);
+                else overlap = true;
+            }
+        }
+
+        return {blocks: mappedRanges, overlap: overlap};
+    }
+
     static async scheduleDeletion(originalContent: Message | Interaction, time: number) {
         let message;
         if (originalContent instanceof Message) {
@@ -161,7 +226,7 @@ export class SearchMap<K, V> extends Map {
         return undefined;
     }
 
-    public forEach(callbackfn: (value: V, key: K, map: Map<K, V>) => void, thisArg?: any): void {
+    public override forEach(callbackfn: (value: V, key: K, map: Map<K, V>) => void, thisArg?: any): void {
         for (const [key, value] of this) {
             callbackfn.call(thisArg, value, key, this);
         }
@@ -228,4 +293,3 @@ export class Time {
         return parts.join(' ') || '0s';
     }
 }
-

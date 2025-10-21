@@ -1,8 +1,8 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, User, Guild, GuildMember } from "discord.js";
-import BaseCommand from "../classes/BaseCommand";
+import BaseCommand from "../../general/classes/BaseCommand";
 import { Main } from "../Main";
 import UserHandler from "../handlers/UserHandler";
-import GeneralUtils from "../utils/GeneralUtils";
+import GeneralUtils from "src/general/utils/GeneralUtils";
 
 class Beg extends BaseCommand {
     earnings: Map<string, number> = new Map();

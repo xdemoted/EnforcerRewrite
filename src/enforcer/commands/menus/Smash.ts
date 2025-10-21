@@ -1,8 +1,8 @@
 import { ApplicationCommandType, ApplicationIntegrationType, ContextMenuCommandBuilder, ContextMenuCommandInteraction, InteractionContextType, RESTPostAPIApplicationCommandsJSONBody, RESTPostAPIContextMenuApplicationCommandsJSONBody } from "discord.js";
-import BaseCommand from "../../classes/BaseCommand";
+import BaseCommand from "../../../general/classes/BaseCommand";
 import { Main } from "../../Main";
-import { UserRating } from "src/enforcer/classes/api/mongodb/User";
-import GeneralUtils from "src/enforcer/utils/GeneralUtils";
+import { UserRating } from "src/general/classes/api/mongodb/User";
+import GeneralUtils from "src/general/utils/GeneralUtils";
 import UserHandler from "src/enforcer/handlers/UserHandler";
 import MongoHandler from "src/enforcer/handlers/MongoHandler";
 

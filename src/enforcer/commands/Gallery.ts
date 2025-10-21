@@ -1,16 +1,16 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, User, Guild, GuildMember } from "discord.js";
-import BaseCommand from "../classes/BaseCommand";
+import BaseCommand from "../../general/classes/BaseCommand";
 import { Main } from "../Main";
 import express from "express";
 import UserHandler from "../handlers/UserHandler";
 import fs, { appendFile } from "fs";
 import MongoHandler from "../handlers/MongoHandler";
-import { UserRating } from "../classes/api/mongodb/User";
-import Waifu from "../classes/api/Waifu";
-import { Rating } from "../classes/Rating";
+import { UserRating } from "../../general/classes/api/mongodb/User";
+import Waifu from "../../general/classes/api/Waifu";
+import { Rating } from "../../general/classes/Rating";
 import { json } from "stream/consumers";
-import GeneralUtils from "../utils/GeneralUtils";
-import HTMLUtils from "../utils/HTMLUtils";
+import GeneralUtils from "src/general/utils/GeneralUtils";
+import HTMLUtils from "src/general/utils/HTMLUtils";
 import WebHandler from "../handlers/WebHandler";
 
 class Gallery extends BaseCommand {

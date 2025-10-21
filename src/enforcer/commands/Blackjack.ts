@@ -1,9 +1,9 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, User, Guild, GuildMember, MessageFlags, Interaction, MessageComponentInteraction } from "discord.js";
-import BaseCommand from "../classes/BaseCommand";
+import BaseCommand from "../../general/classes/BaseCommand";
 import { Main } from "../Main";
-import WaifuRandom from "../classes/api/Waifu";
+import WaifuRandom from "../../general/classes/api/Waifu";
 import UserHandler from "../handlers/UserHandler";
-import GeneralUtils from "../utils/GeneralUtils";
+import GeneralUtils from "src/general/utils/GeneralUtils";
 import axios from "axios";
 
 class Flip extends BaseCommand {

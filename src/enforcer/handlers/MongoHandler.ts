@@ -1,9 +1,7 @@
 import { Collection, Db, MongoClient, WithId } from "mongodb";
-import User from "../classes/api/mongodb/User";
+import User from "../../general/classes/api/mongodb/User";
 import * as discord from "discord.js";
-import GeneralUtils from "../utils/GeneralUtils";
-import ActiveUser from "../classes/api/mongodb/ActiveUser";
-import Waifu from "../classes/api/Waifu";
+import Waifu from "../../general/classes/api/Waifu";
 import { Main } from "../Main";
 
 export default class MongoHandler {

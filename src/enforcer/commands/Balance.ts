@@ -1,5 +1,5 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, User, Guild, GuildMember } from "discord.js";
-import BaseCommand from "../classes/BaseCommand";
+import BaseCommand from "../../general/classes/BaseCommand";
 import { Main } from "../Main";
 import UserHandler from "../handlers/UserHandler";
 
@@ -16,8 +16,8 @@ class Stats extends BaseCommand {
 
     public async execute(interaction: CommandInteraction): Promise<void> {
         const user = await UserHandler.getInstance().getUser(interaction.user.id);
-        if (user.currency == 0) {
-            await interaction.editReply({ content: "You a poor bitch aint cha, don't even bother asking next time. <a:gem:1396788024934662144>" });
+        if (user.currency <= 0) {
+            await interaction.editReply({ content: "You're too poor for this command. <a:gem:1396788024934662144>" });
             return;
         }
         await interaction.editReply({ content: `You have ${user.currency} gems. <a:gem:1396788024934662144>` });
