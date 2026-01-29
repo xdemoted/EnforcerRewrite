@@ -1,4 +1,4 @@
-@font-face {
+we'll``@font-face {
     font-family: 'Segmento';
     src: url('fonts/segmento.otf') format('opentype');
     font-weight: bold;
@@ -54,7 +54,7 @@ body, html {
     height: 100%;
     width: calc(100% / 6);
     max-width: 200px;
-    font-size: 2vw;
+    font-size: max(min(1.5vw, 22px), 12px);
     font-weight: bold;
     text-align: center;
     color: white;

@@ -7,7 +7,7 @@ import GeneralUtils from "src/general/utils/GeneralUtils";
 import { UserRating } from "src/general/classes/api/mongodb/User";
 
 class Pass extends BaseCommand {
-    public deferReply: boolean = false;
+    public override deferReply: boolean = false;
     public getCommand(): RESTPostAPIContextMenuApplicationCommandsJSONBody {
         return new ContextMenuCommandBuilder()
             .setName("Pass")

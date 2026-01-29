@@ -3,7 +3,7 @@ import BaseCommand from "./BaseCommand";
 import fs from "fs";
 import EventHandler from "../handlers/EventHandler";
 
-class GenericBot {
+export class GenericBot {
     public client: Client = new Client({ partials: [Partials.Message, Partials.Channel, Partials.Reaction, Partials.GuildMember, Partials.User], intents: 131071 });
     public commands: BaseCommand[] = [];
     public token: string | undefined;
@@ -11,10 +11,9 @@ class GenericBot {
     public allowedUsers: string[] = ["316243027423395841"];
     public commandDirectory: string;
     public eventHandler?: EventHandler;
-    static instance: any;
 
     public constructor(token: string, commandDirectory: string) {
-        GenericBot.instance = this;
+        console.log(`Begin login for [${commandDirectory}]`);
         this.commandDirectory = commandDirectory;
         this.token = token;
 
@@ -112,9 +111,9 @@ class GenericBot {
     getCommands(): BaseCommand[] {
         return this.commands;
     }
-
-    static getInstance(): GenericBot {
-        return GenericBot.instance;
+    
+    public static getInstance(): GenericBot {
+        throw new Error("Get instance method not implemented.");
     }
 
     static getVariables(): Env {
@@ -133,5 +132,3 @@ interface Env {
     GUILDS_COLLECTION: string | undefined;
     USERS_COLLECTION: string | undefined;
 }
-
-export default GenericBot;

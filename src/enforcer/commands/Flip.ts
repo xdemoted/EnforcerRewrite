@@ -9,7 +9,7 @@ class Flip extends BaseCommand {
     private tailsURL = "http://panel.wolf-co.com:25551/tails.gif"
     private headsURL = "http://panel.wolf-co.com:25551/heads.gif";
 
-    public deferReply: boolean = false;
+    public override deferReply: boolean = false;
 
     public getCommand(): RESTPostAPIChatInputApplicationCommandsJSONBody {
         return new SlashCommandBuilder()

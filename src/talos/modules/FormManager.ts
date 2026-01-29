@@ -2,12 +2,13 @@ import axios from "axios";
 import { Base, Channel, TextChannel } from "discord.js";
 import fs from "fs";
 import { Axios } from "node_modules/axios/index.cjs";
+import GeneralUtils from "src/general/utils/GeneralUtils";
 
 class FormManager {
     public textTags = ["img", "p", "quote", "title", "description", "fields"]
     public selfClosingTags = ["img"]
 
-    public parseFormData(formData: String) {
+    public parseFormData(formData: String) { // Throws Error on invalid image tag
         if (!formData.startsWith("<form>")) {
             throw new Error("Invalid form data");
         }
@@ -18,26 +19,26 @@ class FormManager {
         let rootTag;
         let currentTag: BaseTag | undefined;
 
+        console.log(tags)
+
         for (let i = 0; i < formData.length; i++) {
             let char = formData[i];
             if (char === "<") {
                 for (let j = i; j < formData.length; j++) {
                     if (formData[j] === ">") {
                         let tagName = formData.substring(i + 1, j).trim();
-
                         if (tagName.startsWith("img")) {
                             const imgTag = new ImageTag(i, formData.substring(i, j + 1));
                             if (currentTag instanceof ContainerTag) {
                                 imgTag.parent = currentTag;
                                 currentTag.content.push(imgTag);
-
                             }
                         } else {
                             let isClosingTag = tagName.startsWith("/");
-                            
+
                             if (isClosingTag) {
                                 if (currentTag instanceof TextTag) {
-                                    currentTag.content = formData.substring(currentTag.index + currentTag.name.length + 2, i);
+                                    currentTag.content = formData.substring(currentTag.index + currentTag.name.length + 2, i)
                                 }
 
                                 if (currentTag?.parent === undefined) {
@@ -58,9 +59,9 @@ class FormManager {
                                     lastTag.content.push(currentTag);
                                 }
                             }
-                            i = j;
-                            break;
                         }
+                        i = j;
+                        break; // Prevent tag greediness
                     }
                 }
             }
@@ -93,10 +94,7 @@ class BaseTag {
     }
 
     public print(depth = 0) {
-        let padding = "";
-        for (let i = 0; i < depth; i++) {
-            padding += "  ";
-        }
+        let padding = GeneralUtils.addDepthPadding(depth);
         console.log(`${padding}{ name: ${this.name}, index: ${this.index} }`)
     }
 }
@@ -115,6 +113,11 @@ class ImageTag extends BaseTag {
             throw new Error("Invalid img tag, missing src attribute");
         }
     }
+
+    public override print(depth = 0) {
+        let padding = GeneralUtils.addDepthPadding(depth);
+        console.log(`${padding}{ name: ${this.name}, index: ${this.index}, src: ${this.src} }`)
+    }
 }
 
 class ContainerTag extends BaseTag {
@@ -125,13 +128,10 @@ class ContainerTag extends BaseTag {
     }
 
     public override print(depth = 0) {
-        let padding = "";
-        for (let i = 0; i < depth; i++) {
-            padding += "  ";
-        }
+        let padding = GeneralUtils.addDepthPadding(depth);
         console.log(padding + `{ name: ${this.name}, index: ${this.index}`);
         console.log(padding + "  content: [");
-        this.content.forEach(tag => tag.print(depth + 1));
+        this.content.forEach(tag => tag.print(depth + 2));
         console.log(`${padding}  ]`);
         console.log(padding + "}");
     }
@@ -144,27 +144,11 @@ class TextTag extends BaseTag {
         this.content = content;
     }
     public override print(depth = 0) {
-        let padding = "";
-        for (let i = 0; i < depth; i++) {
-            padding += "  ";
-        }
+        let padding = GeneralUtils.addDepthPadding(depth);
         console.log(`${padding}{ name: ${this.name}, index: ${this.index}, content: ${this.content} }`)
     }
 }
 
 console.log(new FormManager().parseFormData(fs.readFileSync("C:/Users/risin/OneDrive/Documents/GitHub/EnforcerRewrite2/src/resources/testform.html").toString())?.print());
 
-/*
-try {
-    axios.get("https://media.disordapp.net/attachments/1088999109387620493/1421216058550780045/image.png?ex=68d83a19&is=68d6e899&hm=0dcd4b6f6ca2ba8ecaf89c179a9fbb8c5185d55f59cd50c123c20a3bcd3038df&=&format=webp&quality=lossless&width=1872&height=393", { responseType: 'arraybuffer' }).then(
-        (response) => {
-            let buffer = Buffer.from(response.data, "utf-8");
-            fs.writeFileSync("C:/Users/risin/OneDrive/Documents/GitHub/EnforcerRewrite2/src/resources/testimage.png", buffer);
-        }
-    )
-}
-catch (e) {
-    console.log(e);
-}
-*/
 console.log("done");

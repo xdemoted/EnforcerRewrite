@@ -200,6 +200,14 @@ export default class GeneralUtils {
         }
         array.push(value);
     }
+
+    public static addDepthPadding(depth: number): string {
+        let padding = "";
+        for (let i = 0; i < depth; i++) {
+            padding += "  ";
+        }
+        return padding;
+    }
 }
 
 export class SearchResult<K, V> {

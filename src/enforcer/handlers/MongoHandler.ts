@@ -3,46 +3,40 @@ import User from "../../general/classes/api/mongodb/User";
 import * as discord from "discord.js";
 import Waifu from "../../general/classes/api/Waifu";
 import { Main } from "../Main";
+import MongoConnector from "src/general/handlers/MongoConnector";
 
 export default class MongoHandler {
     private static instance: MongoHandler;
-    private database?: Db;
     private collections: { [key: string]: Collection } = {};
+    private db: Db | undefined;
 
     private constructor() {
-        this.connect()
-    }
+        const db = MongoConnector.getInstance().getDatabase().onComplete((db: Db) => {
+            this.db = db;
 
-    public async connect(): Promise<void> {
-        const uri = Main.getVariables().DB_CONN_STRING;
-
-        if (!uri) {
-            throw new Error("MongoDB URI is not defined in environment variables.");
-        }
-
-        const client = new MongoClient(uri);
-        try {
-            await client.connect();
-            this.database = client.db(Main.getVariables().DB_NAME);
-            this.collections.users = this.database.collection("users");
-            this.collections.guilds = this.database.collection("guilds");
-            this.collections.waifus = this.database.collection("waifus");
-            console.log("Connected to MongoDB successfully.");
-        } catch (error) {
-            console.error("Failed to connect to MongoDB:", error);
-            throw error;
-        }
+            if (db) {
+                this.collections.users = db.collection("users");
+                this.collections.guilds = db.collection("guilds");
+                this.collections.waifus = db.collection("waifus");
+            }
+        })
     }
 
     public async getUser(user: discord.User): Promise<User> {
         if (!this.collections.users) {
             throw new Error("Users collection is not initialized.");
         }
+
         const userDoc = await this.collections.users.findOne({ userID: user.id });
         return userDoc ? User.fromDocument(userDoc) : User.create(user.displayName, user.username, user.id);
     }
 
     public async updateWaifu(waifu: Waifu) {
+        if (!this.collections.waifus) {
+            console.error("Waifus collection is not initialized."); // Prevent Crash on fail
+            return;
+        }
+
         this.collections.waifus.updateOne(
             { waifuID: waifu.id },
             { $set: waifu },
@@ -56,6 +50,7 @@ export default class MongoHandler {
         if (!this.collections.waifus) {
             throw new Error("Waifus collection is not initialized.");
         }
+
         const waifuDoc = await this.collections.waifus.findOne({ waifuID: waifuId });
 
         if (!waifuDoc) {

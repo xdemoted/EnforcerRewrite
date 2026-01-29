@@ -2,7 +2,7 @@ import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInpu
 import BaseCommand from "../../general/classes/BaseCommand";
 
 class Announce extends BaseCommand {
-    public deferReply = false;
+    public override deferReply = false;
 
     public titleRow = new ActionRowBuilder<TextInputBuilder>()
         .addComponents(
@@ -36,15 +36,13 @@ class Announce extends BaseCommand {
         return new SlashCommandBuilder()
             .setName("announce")
             .setDescription("An announcement command")
-            .setIntegrationTypes([ApplicationIntegrationType.GuildInstall])
+            .setIntegrationTypes([ApplicationIntegrationType.GuildInstall,ApplicationIntegrationType.UserInstall])
             .setContexts([InteractionContextType.PrivateChannel, InteractionContextType.Guild])
             .toJSON();
     }
 
     public async execute(interaction: CommandInteraction): Promise<void> {
         const channel = interaction.channel;
-
-        if (!channel?.isSendable()) {await interaction.editReply({ content: "This channel is not sendable." }); return; }
 
         interaction.showModal(this.modal);
 
@@ -62,9 +60,14 @@ class Announce extends BaseCommand {
 
                 message += `\n\n${content}`;
 
-                channel.send({ content: message });
+                if (!channel?.isSendable()) {modalInteraction.reply({ content: message, ephemeral: false }); return;}
 
-                await modalInteraction.reply({ content: "Announcement created successfully!", ephemeral: true });
+                try {
+                    await channel.send({ content: message})
+                    await modalInteraction.reply({ content: "Announcement created successfully!", ephemeral: true });
+                } catch (error) {
+                    await modalInteraction.reply({ content: message, ephemeral: false });
+                }
             })
     }
 }

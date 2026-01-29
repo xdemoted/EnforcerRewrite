@@ -10,7 +10,7 @@ class Flip extends BaseCommand {
     private tailsURL = "https://files.catbox.moe/mfnic9.gif"
     private headsURL = "https://files.catbox.moe/ev0osf.gif";
 
-    public deferReply: boolean = false;
+    public override deferReply: boolean = false;
 
     public getCommand(): RESTPostAPIChatInputApplicationCommandsJSONBody {
         return new SlashCommandBuilder()

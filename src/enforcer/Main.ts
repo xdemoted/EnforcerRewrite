@@ -7,11 +7,13 @@ import dotenv from "dotenv";
 import path from "path";
 import { dir } from "console";
 import WebHandler from "./handlers/WebHandler";
-import GenericBot from "src/general/classes/GenericBot";
+import {GenericBot} from "src/general/classes/GenericBot";
+import { MessageHandler } from "./handlers/MessageHandler";
 
 require('@dotenvx/dotenvx').config()
 
 export class Main extends GenericBot {
+    static instance: Main;
     private messages = require("../resources/messages.json");
     private mongo: MongoHandler = MongoHandler.getInstance();
 
@@ -21,6 +23,7 @@ export class Main extends GenericBot {
 
         this.client.on('ready', () => {
             this.startWebHandler();
+            MessageHandler.getInstance();
         });
     }
 

@@ -1,0 +1,4 @@
+interface GuildSettings {
+    leveling: boolean;
+    
+}

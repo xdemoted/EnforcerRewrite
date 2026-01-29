@@ -7,7 +7,7 @@ import UserHandler from "src/enforcer/handlers/UserHandler";
 import MongoHandler from "src/enforcer/handlers/MongoHandler";
 
 class Smash extends BaseCommand {
-    public deferReply: boolean = false;
+    public override deferReply: boolean = false;
     public getCommand(): RESTPostAPIContextMenuApplicationCommandsJSONBody {
         return new ContextMenuCommandBuilder()
             .setName("Smash")

@@ -1,8 +1,5 @@
 import { Message, MessageFlags } from "discord.js";
-import { Main } from "../../enforcer/Main";
-import UserHandler from "../../enforcer/handlers/UserHandler";
-import GeneralUtils from "src/general/utils/GeneralUtils";
-import GenericBot from "src/general/classes/GenericBot";
+import {GenericBot} from "src/general/classes/GenericBot";
 
 export default class EventHandler {
 
@@ -48,13 +45,9 @@ export default class EventHandler {
     }
 
     startMessageListener(main: GenericBot): void {
-        Main.getInstance().getClient().on('messageCreate', (message) => {
+        main.getClient().on('messageCreate', (message) => {
             if (main.getLockdown()&&!main.getAllowedUsers().includes(message.author.id)) return;
 
-            UserHandler.getInstance().getUser(message.author.id).then(user => {
-                UserHandler.getInstance().giveInteractXP(message, user);
-                user.stats.totalMessages += 1
-            })
         });
     }
 }

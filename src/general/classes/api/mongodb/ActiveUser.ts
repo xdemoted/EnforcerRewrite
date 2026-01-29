@@ -15,12 +15,12 @@ export default class ActiveUser extends User {
         this.lastUpdated = Date.now();
     }
 
-    public modifyXP(amount: number, operator?: Operator) {
+    public override modifyXP(amount: number, operator?: Operator) {
         this.setLastUpdate();
         return super.modifyXP(amount, operator);
     }
 
-    public modifyCurrency(amount: number, operator?: Operator) {
+    public override modifyCurrency(amount: number, operator?: Operator) {
         this.setLastUpdate();
         return super.modifyCurrency(amount, operator);
     }
