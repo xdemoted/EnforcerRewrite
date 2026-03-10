@@ -143,4 +143,6 @@ var observer = new MutationObserver(() => {
 
 });
 
-observer.observe(document.body, { childList: true });
+if (document.body) {
+    observer.observe(document.body, { childList: true });
+}

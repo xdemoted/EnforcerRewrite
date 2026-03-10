@@ -115,4 +115,12 @@ setTimeout(function () {
 var observer = new MutationObserver(function () {
     correctSizes();
 });
-observer.observe(document.body, { childList: true });
+document.addEventListener("DOMContentLoaded", () => {
+    const target = document.body;
+    if (target) {
+        observer.observe(target, { childList: true });
+    } else {
+        console.error("document.body not found for MutationObserver");
+    }
+});
+

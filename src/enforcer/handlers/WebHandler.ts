@@ -8,8 +8,13 @@ export default class WebHandler {
     public app = express();
 
     constructor() {
-        //this.app.listen(Main.getVariables().APP_PORT || 25551);
-        this.app.use(express.static("src/enforcer/web/assets/"));
+        this.app.listen(Main.getVariables().APP_PORT || 25551);
+        this.app.use((req, res, next) => {
+            console.log('IP:', req.ip);
+            next();
+        });
+        
+        this.app.use(express.static("src/enforcer/web/assets/"))
         this.loadMainPage();
     }
 

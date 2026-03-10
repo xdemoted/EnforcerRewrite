@@ -1,7 +1,9 @@
 import { ApplicationIntegrationType, InteractionContextType, RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Colors, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, User, Guild, GuildMember, Interaction, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import BaseCommand from "../../general/classes/BaseCommand";
+import { Singleton } from "src/container/Singleton";
 
-class Announce extends BaseCommand {
+@Singleton
+export class Announce extends BaseCommand {
     public override deferReply = false;
 
     public titleRow = new ActionRowBuilder<TextInputBuilder>()
@@ -71,5 +73,3 @@ class Announce extends BaseCommand {
             })
     }
 }
-
-module.exports = new Announce();

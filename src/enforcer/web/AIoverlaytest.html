@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Esports Score Overlay</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #111;
+      color: #fff;
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    /* Controls */
+    .controls {
+      width: 320px;
+      background: #1b1b1b;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.6);
+      font-size: 14px;
+    }
+    .controls h2 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+    .field {
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .field label {
+      font-weight: 600;
+    }
+    .field input[type="text"],
+    .field input[type="number"] {
+      padding: 4px 6px;
+      border-radius: 4px;
+      border: 1px solid #444;
+      background: #111;
+      color: #fff;
+    }
+    .field input[type="color"] {
+      padding: 0;
+      border-radius: 4px;
+      border: 1px solid #444;
+      background: #111;
+      height: 28px;
+    }
+    .field input[type="file"] {
+      font-size: 12px;
+    }
+
+    /* Overlay */
+    .overlay-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .score-overlay {
+      display: flex;
+      align-items: stretch;
+      min-width: 720px;
+      max-width: 960px;
+      height: 110px;
+      background: linear-gradient(90deg, #222, #111);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 24px rgba(0,0,0,0.8);
+      border: 2px solid #000;
+    }
+
+    .team {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 80px 1fr 70px;
+      align-items: center;
+      padding: 10px 14px;
+      gap: 10px;
+      position: relative;
+    }
+
+    .team-left {
+      border-right: 2px solid rgba(0,0,0,0.4);
+    }
+    .team-right {
+      border-left: 2px solid rgba(0,0,0,0.4);
+    }
+
+    .team::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.18;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .team-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #000;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid rgba(255,255,255,0.3);
+    }
+    .team-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .team-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+    .team-name {
+      font-size: 20px;
+      line-height: 1.1;
+    }
+    .team-tagline {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+
+    .team-score {
+      font-size: 36px;
+      font-weight: 800;
+      text-align: center;
+      text-shadow: 0 0 8px rgba(0,0,0,0.8);
+    }
+
+    .center-block {
+      width: 140px;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      border-inline: 2px solid #000;
+      position: relative;
+      overflow: hidden;
+    }
+    .center-block::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.12), transparent 60%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+    .center-label {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+    .center-time {
+      font-size: 22px;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <h2>Overlay Settings</h2>
+
+    <div class="field">
+      <label for="timeText">Time / State</label>
+      <input id="timeText" type="text" value="10:52" />
+    </div>
+
+    <!-- TEAM 1 -->
+    <h3>Team 1</h3>
+    <div class="field">
+      <label for="team1Name">Name</label>
+      <input id="team1Name" type="text" value="RAYS" />
+    </div>
+    <div class="field">
+      <label for="team1Score">Score</label>
+      <input id="team1Score" type="number" value="2" />
+    </div>
+    <div class="field">
+      <label for="team1Color">Color</label>
+      <input id="team1Color" type="color" value="#00b4ff" />
+    </div>
+    <div class="field">
+      <label for="team1Logo">Logo</label>
+      <input id="team1Logo" type="file" accept="image/*" />
+    </div>
+
+    <!-- TEAM 2 -->
+    <h3>Team 2</h3>
+    <div class="field">
+      <label for="team2Name">Name</label>
+      <input id="team2Name" type="text" value="COBRAS" />
+    </div>
+    <div class="field">
+      <label for="team2Score">Score</label>
+      <input id="team2Score" type="number" value="6" />
+    </div>
+    <div class="field">
+      <label for="team2Color">Color</label>
+      <input id="team2Color" type="color" value="#ff5b00" />
+    </div>
+    <div class="field">
+      <label for="team2Logo">Logo</label>
+      <input id="team2Logo" type="file" accept="image/*" />
+    </div>
+  </div>
+
+  <div class="overlay-wrapper">
+    <div class="score-overlay">
+      <!-- TEAM 1 -->
+      <div class="team team-left" id="team1Block">
+        <div class="team-logo">
+          <img id="team1LogoImg" alt="Team 1 Logo" />
+        </div>
+        <div class="team-info">
+          <div class="team-name" id="team1NameDisplay">RAYS</div>
+          <div class="team-tagline">HOME</div>
+        </div>
+        <div class="team-score" id="team1ScoreDisplay">2</div>
+      </div>
+
+      <!-- CENTER -->
+      <div class="center-block">
+        <div class="center-label">MATCH TIME</div>
+        <div class="center-time" id="timeDisplay">10:52</div>
+      </div>
+
+      <!-- TEAM 2 -->
+      <div class="team team-right" id="team2Block">
+        <div class="team-score" id="team2ScoreDisplay">6</div>
+        <div class="team-info" style="text-align:right;">
+          <div class="team-name" id="team2NameDisplay">COBRAS</div>
+          <div class="team-tagline">AWAY</div>
+        </div>
+        <div class="team-logo">
+          <img id="team2LogoImg" alt="Team 2 Logo" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const timeInput = document.getElementById("timeText");
+    const timeDisplay = document.getElementById("timeDisplay");
+
+    const team1NameInput = document.getElementById("team1Name");
+    const team1ScoreInput = document.getElementById("team1Score");
+    const team1ColorInput = document.getElementById("team1Color");
+    const team1LogoInput = document.getElementById("team1Logo");
+
+    const team2NameInput = document.getElementById("team2Name");
+    const team2ScoreInput = document.getElementById("team2Score");
+    const team2ColorInput = document.getElementById("team2Color");
+    const team2LogoInput = document.getElementById("team2Logo");
+
+    const team1NameDisplay = document.getElementById("team1NameDisplay");
+    const team1ScoreDisplay = document.getElementById("team1ScoreDisplay");
+    const team1Block = document.getElementById("team1Block");
+    const team1LogoImg = document.getElementById("team1LogoImg");
+
+    const team2NameDisplay = document.getElementById("team2NameDisplay");
+    const team2ScoreDisplay = document.getElementById("team2ScoreDisplay");
+    const team2Block = document.getElementById("team2Block");
+    const team2LogoImg = document.getElementById("team2LogoImg");
+
+    function applyTeamColor(block, color) {
+      block.style.background = `linear-gradient(135deg, ${color} 0%, #111 70%)`;
+      block.style.boxShadow = `inset 0 0 20px rgba(0,0,0,0.7)`;
+      block.style.setProperty("--team-color", color);
+      block.style.color = "#fff";
+      block.style.position = "relative";
+      block.style.overflow = "hidden";
+      block.style.borderColor = "rgba(0,0,0,0.6)";
+      block.style.setProperty("--team-color-soft", color + "33");
+      block.style.setProperty("--team-color-strong", color);
+      block.style.setProperty("--team-color-dark", "#000");
+      block.style.setProperty("--team-color-border", "rgba(0,0,0,0.7)");
+      block.style.setProperty("--team-color-glow", color);
+      block.style.setProperty("--team-color-shadow", "rgba(0,0,0,0.8)");
+      block.style.setProperty("--team-color-overlay", color + "55");
+    }
+
+    // Initial colors
+    applyTeamColor(team1Block, team1ColorInput.value);
+    applyTeamColor(team2Block, team2ColorInput.value);
+
+    timeInput.addEventListener("input", () => {
+      timeDisplay.textContent = timeInput.value || "";
+    });
+
+    team1NameInput.addEventListener("input", () => {
+      team1NameDisplay.textContent = team1NameInput.value || "";
+    });
+    team1ScoreInput.addEventListener("input", () => {
+      team1ScoreDisplay.textContent = team1ScoreInput.value || "0";
+    });
+    team1ColorInput.addEventListener("input", () => {
+      applyTeamColor(team1Block, team1ColorInput.value);
+    });
+
+    team2NameInput.addEventListener("input", () => {
+      team2NameDisplay.textContent = team2NameInput.value || "";
+    });
+    team2ScoreInput.addEventListener("input", () => {
+      team2ScoreDisplay.textContent = team2ScoreInput.value || "0";
+    });
+    team2ColorInput.addEventListener("input", () => {
+      applyTeamColor(team2Block, team2ColorInput.value);
+    });
+
+    function handleLogoInput(fileInput, imgEl) {
+      const file = fileInput.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        imgEl.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    team1LogoInput.addEventListener("change", () => {
+      handleLogoInput(team1LogoInput, team1LogoImg);
+    });
+    team2LogoInput.addEventListener("change", () => {
+      handleLogoInput(team2LogoInput, team2LogoImg);
+    });
+  </script>
+</body>
+</html>

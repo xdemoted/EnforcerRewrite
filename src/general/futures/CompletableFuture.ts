@@ -15,5 +15,6 @@ export class CompleteableFuture<T> {
         for (const listener of this.listeners) {
             listener(value);
         }
+        this.value = value;
     }
 }

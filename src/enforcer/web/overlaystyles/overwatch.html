@@ -1,0 +1,126 @@
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Aldrich&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --team-1-color: #ff0000;
+            --team-1-url: url("https://images.leagueos.gg/teams/aoe75goi48twu2rm8mami6cc8/65ef677975c24e86c705c716") --team-1-name: "Team 1";
+            --team-2-color: #0000ff;
+            --team-2-url: url("https://images.leagueos.gg/teams/aoe75goi48twu2rm8mami6cc8/65ef677975c24e86c705c716") --team-2-name: "Team 2";
+
+            --score-width: 32.5%;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+            font-family: Aldrich;
+        }
+
+        .scoreline {
+            height: 6%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .team1scoreline {
+            height: 100%;
+            width: var(--score-width);
+            background-color: rgb(14, 14, 14);
+            clip-path: polygon(0 0, 100% 0, 97% 100%, 0 100%);
+
+            display: flex;
+            justify-content: right;
+        }
+
+        .team2scoreline {
+            height: 100%;
+            width: var(--score-width);
+            background-color: rgb(14, 14, 14);
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 3% 100%);
+
+            display: flex;
+            justify-content: left;
+        }
+
+        .roundscoreline {
+            height: 122%;
+            width: 12%;
+            background-color: blue;
+            clip-path: polygon(0 1vw, 1vw 0, calc(100% - 1vw) 0, 100% 1vw, 90% 100%, 10% 100%);
+        }
+
+        .teamlogo {
+            height: 80%;
+            padding: 0.5vh;
+            aspect-ratio: 1 / 1;
+        }
+
+        .team1score {
+            height: 100%;
+            aspect-ratio: 1/1;
+            background-color: rgb(255, 255, 255);
+            padding-right: 3%;
+            clip-path: polygon(1vw 0, 100% 0, 100% 100%, 0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .team2score {
+            height: 100%;
+            aspect-ratio: 1/1;
+            background-color: rgb(255, 255, 255);
+            padding-left: 3%;
+            clip-path: polygon(0 0, calc(100% - 1vw) 0, 100% 100%, 0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .teamtextcontainer {
+            height: 100%;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+        }
+
+        .teamtext {
+            color: white;
+            font-size: 2.5vw;
+            white-space: nowrap;
+        }
+
+        .scoretext {
+            color: rgb(0, 0, 0);
+            font-size: 3vw;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scoreline">
+        <div class="team1scoreline">
+            <div class="teamtextcontainer">
+                <div class="teamtext">MSSU Gold</div>
+            </div>
+            <img class="teamlogo"
+                src="https://images.leagueos.gg/teams/5kgzod4hltq3a5ezbd1725q4t/648d0f35832b120a065ce019">
+            <div class="team1score">
+                <div class="scoretext" style="padding-left: 25%;">3</div>
+            </div>
+        </div>
+        <div class="team2scoreline">
+            <div class="team2score">
+                <div class="scoretext" style="padding-right: 25%;">0</div>
+            </div>
+            <img class="teamlogo"
+                src="https://images.leagueos.gg/teams/aoe75goi48twu2rm8mami6cc8/65ef677975c24e86c705c716">
+            <div class="teamtextcontainer">
+                <div class="teamtext">Regents Esports</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
