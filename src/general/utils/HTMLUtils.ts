@@ -7,6 +7,15 @@ class HTMLUtils {
         }
         return filledTemplate;
     }
+    static getProperties(innerText: string): { [key: string]: string } {
+        const properties: { [key: string]: string } = {};
+        const regex = /(\w+)="([^"]*)"/g;
+        let match;
+        while ((match = regex.exec(innerText)) !== null) {
+            properties[match[1]] = match[2];
+        }
+        return properties;
+    }
 }
 
 export default HTMLUtils;

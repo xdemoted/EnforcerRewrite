@@ -1,6 +1,6 @@
 import GeneralUtils from "./GeneralUtils"
 
-class Encoder {
+export class TranslationUtil {
     static binaryFlagsEncode(flags: boolean[]) {
         const reduced = flags.reduce((prev, curr, i) => prev + (curr ? 2 ** i : 0), 0)
         const output = flags.length.toString().padStart(2, "0") + reduced.toString()
@@ -16,6 +16,8 @@ class Encoder {
         }
         return flags
     }
-}
 
-export { Encoder }
+    static parseTimeString(time: string) {
+        
+    }
+}

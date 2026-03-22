@@ -65,6 +65,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
         }
 
         .team2score {
@@ -76,13 +77,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
         }
 
         .teamtextcontainer {
             height: 100%;
-            background-color: transparent;
             display: flex;
             align-items: center;
+            min-width: 0;
         }
 
         .teamtext {
@@ -91,36 +93,231 @@
             white-space: nowrap;
         }
 
+        input.teamtext {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: transparent;
+            border: 0;
+            outline: 0;
+            box-shadow: none;
+            width: 100%;
+            text-align: right;
+        }
+
         .scoretext {
             color: rgb(0, 0, 0);
             font-size: 3vw;
+            line-height: 1;
+            text-align: center;
+        }
+
+        input.scoretext {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+            background: transparent;
+            border: 0;
+            outline: 0;
+            box-shadow: none;
+            padding: 0;
+            margin: 0;
+            width: 1.5ch;
+        }
+
+        input.scoretext::-webkit-outer-spin-button,
+        input.scoretext::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .setup-overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.82);
+            z-index: 10;
+        }
+
+        .setup-panel {
+            width: min(44rem, 92vw);
+            padding: 2rem;
+            background: rgb(14, 14, 14);
+            color: white;
+            border: 0.2rem solid rgb(255, 255, 255);
+            display: grid;
+            gap: 1rem;
+        }
+
+        .setup-title {
+            font-size: 2rem;
+        }
+
+        .setup-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .setup-field {
+            display: grid;
+            gap: 0.45rem;
+        }
+
+        .setup-label {
+            font-size: 1rem;
+            color: rgb(220, 220, 220);
+        }
+
+        .setup-input {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 100%;
+            padding: 0.75rem 0.9rem;
+            border: 0.12rem solid rgb(255, 255, 255);
+            background: rgb(255, 255, 255);
+            color: rgb(0, 0, 0);
+            font-size: 1rem;
+        }
+
+        .setup-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .setup-button {
+            appearance: none;
+            -webkit-appearance: none;
+            border: 0;
+            padding: 0.8rem 1.4rem;
+            background: rgb(255, 255, 255);
+            color: rgb(0, 0, 0);
+            font-size: 1rem;
+            cursor: pointer;
         }
     </style>
 </head>
 
 <body>
+    <div id="setup-overlay" class="setup-overlay">
+        <form id="setup-form" class="setup-panel">
+            <div class="setup-title">Overlay Setup</div>
+            <div class="setup-grid">
+                <label class="setup-field">
+                    <span class="setup-label">Team 1 title</span>
+                    <input id="setup-team1-title" class="setup-input" type="text" value="MSSU Gold">
+                </label>
+                <label class="setup-field">
+                    <span class="setup-label">Team 1 image URL</span>
+                    <input id="setup-team1-image" class="setup-input" type="url"
+                        value="https://images.leagueos.gg/teams/5kgzod4hltq3a5ezbd1725q4t/648d0f35832b120a065ce019">
+                </label>
+                <label class="setup-field">
+                    <span class="setup-label">Team 2 title</span>
+                    <input id="setup-team2-title" class="setup-input" type="text">
+                </label>
+                <label class="setup-field">
+                    <span class="setup-label">Team 2 image URL</span>
+                    <input id="setup-team2-image" class="setup-input" type="url">
+                </label>
+            </div>
+            <div class="setup-actions">
+                <button class="setup-button" type="submit">Apply</button>
+            </div>
+        </form>
+    </div>
+
     <div class="scoreline">
         <div class="team1scoreline">
             <div class="teamtextcontainer">
-                <div class="teamtext">MSSU Gold</div>
+                <input id="team1-title" class="teamtext" type="text" value="MSSU Gold">
             </div>
-            <img class="teamlogo"
+            <img id="team1-logo" class="teamlogo"
                 src="https://images.leagueos.gg/teams/5kgzod4hltq3a5ezbd1725q4t/648d0f35832b120a065ce019">
-            <div class="team1score">
-                <div class="scoretext" style="padding-left: 25%;">3</div>
+            <div id="team1-score-box" class="team1score">
+                <input id="team1-score" class="scoretext" type="number" value="3" style="padding-left: 25%;">
             </div>
         </div>
         <div class="team2scoreline">
-            <div class="team2score">
-                <div class="scoretext" style="padding-right: 25%;">0</div>
+            <div id="team2-score-box" class="team2score">
+                <input id="team2-score" class="scoretext" type="number" value="0" style="padding-right: 25%;">
             </div>
-            <img class="teamlogo"
+            <img id="team2-logo" class="teamlogo"
                 src="https://images.leagueos.gg/teams/aoe75goi48twu2rm8mami6cc8/65ef677975c24e86c705c716">
             <div class="teamtextcontainer">
-                <div class="teamtext">Regents Esports</div>
+                <input id="team2-title" class="teamtext" type="text" value="Placeholder2" style="text-align: left;">
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const setupOverlay = document.getElementById("setup-overlay");
+            const setupForm = document.getElementById("setup-form");
+            const setupTeam1Title = document.getElementById("setup-team1-title");
+            const setupTeam1Image = document.getElementById("setup-team1-image");
+            const setupTeam2Title = document.getElementById("setup-team2-title");
+            const setupTeam2Image = document.getElementById("setup-team2-image");
+            const team1TitleInput = document.getElementById("team1-title");
+            const team1Logo = document.getElementById("team1-logo");
+            const team1ScoreBox = document.getElementById("team1-score-box");
+            const team1ScoreInput = document.getElementById("team1-score");
+            const team2TitleInput = document.getElementById("team2-title");
+            const team2Logo = document.getElementById("team2-logo");
+            const team2ScoreBox = document.getElementById("team2-score-box");
+            const team2ScoreInput = document.getElementById("team2-score");
+
+            const incrementScore = (input) => {
+                const currentValue = Number.parseInt(input.value, 10);
+                input.value = Number.isNaN(currentValue) ? "1" : String(currentValue + 1);
+            };
+
+            setupForm.addEventListener("submit", (event) => {
+                event.preventDefault();
+
+                if (setupTeam1Title.value.trim() !== "") {
+                    team1TitleInput.value = setupTeam1Title.value;
+                }
+
+                if (setupTeam1Image.value.trim() !== "") {
+                    team1Logo.src = setupTeam1Image.value;
+                }
+
+                if (setupTeam2Title.value.trim() !== "") {
+                    team2TitleInput.value = setupTeam2Title.value;
+                }
+
+                if (setupTeam2Image.value.trim() !== "") {
+                    team2Logo.src = setupTeam2Image.value;
+                }
+
+                setupOverlay.style.display = "none";
+            });
+
+            team1ScoreBox.addEventListener("click", () => {
+                incrementScore(team1ScoreInput);
+            });
+
+            team2ScoreBox.addEventListener("click", () => {
+                incrementScore(team2ScoreInput);
+            });
+
+            team1ScoreInput.addEventListener("click", (event) => {
+                event.stopPropagation();
+                team1ScoreInput.select();
+            });
+
+            team2ScoreInput.addEventListener("click", (event) => {
+                event.stopPropagation();
+                team2ScoreInput.select();
+            });
+
+            setupTeam1Title.focus();
+        });
+    </script>
 </body>
 
 </html>

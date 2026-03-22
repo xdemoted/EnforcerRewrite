@@ -86,8 +86,8 @@ export class GenericBot {
     }
 }
 
-interface Env {
-    APP_PORT: number | undefined;
+export interface Env {
+    APP_PORT: string | undefined;
     DB_CONN_STRING: string | undefined;
     DB_NAME: string | undefined;
     DEBUG: boolean | undefined;
@@ -96,4 +96,5 @@ interface Env {
     BOT_TOKEN: string | undefined;
     GUILDS_COLLECTION: string | undefined;
     USERS_COLLECTION: string | undefined;
+    URL_PREFIX: string | undefined;
 }

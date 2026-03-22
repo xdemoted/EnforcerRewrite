@@ -1,0 +1,238 @@
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Aldrich&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --team-1-color: #ff0000;
+            --team-1-url: url("https://images.leagueos.gg/teams/aoe75goi48twu2rm8mami6cc8/65ef677975c24e86c705c716");
+            --team-1-name: "Team 1";
+            --team-2-color: #0000ff;
+            --team-2-url: url("https://images.leagueos.gg/teams/aoe75goi48twu2rm8mami6cc8/65ef677975c24e86c705c716");
+            --team-2-name: "Team 2";
+
+            --score-width: 30.5%;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+            font-family: Aldrich;
+        }
+
+        .scoreline {
+            position: absolute;
+            top: 5%;
+            height: 7%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.2%;
+        }
+
+        .roundbadge {
+            position: absolute;
+            top: 0.8%;
+            left: 50%;
+            transform: translateX(-50%);
+            min-width: 11.5vw;
+            height: 3.2%;
+            padding: 0 1vw;
+            border-radius: 999px;
+            border: 0.12vw solid rgba(255, 255, 255, 0.35);
+            background: linear-gradient(180deg, rgba(24, 24, 24, 0.96) 0%, rgba(10, 10, 10, 0.92) 100%);
+            box-shadow: 0 0.3vw 0.8vw rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.15vw;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .team1scoreline {
+            height: 100%;
+            width: var(--score-width);
+            background: linear-gradient(180deg, rgba(24, 24, 24, 0.96) 0%, rgba(10, 10, 10, 0.92) 100%);
+            border-radius: 999px;
+            border: 0.15vw solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 0.35vw 0.8vw rgba(0, 0, 0, 0.45);
+
+            display: flex;
+            justify-content: right;
+            align-items: center;
+            padding-right: 0.5vw;
+        }
+
+        .team2scoreline {
+            height: 100%;
+            width: var(--score-width);
+            background: linear-gradient(180deg, rgba(24, 24, 24, 0.96) 0%, rgba(10, 10, 10, 0.92) 100%);
+            border-radius: 999px;
+            border: 0.15vw solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 0.35vw 0.8vw rgba(0, 0, 0, 0.45);
+
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            padding-left: 0.5vw;
+        }
+
+        .roundscoreline {
+            height: 122%;
+            width: 12%;
+            background-color: blue;
+            clip-path: polygon(0 1vw, 1vw 0, calc(100% - 1vw) 0, 100% 1vw, 90% 100%, 10% 100%);
+        }
+
+        .teamlogo {
+            height: 80%;
+            padding: 0.5vh;
+            aspect-ratio: 1 / 1;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 0.12vw solid rgba(255, 255, 255, 0.45);
+        }
+
+        .team1score {
+            height: 86%;
+            aspect-ratio: 1/1;
+            background: linear-gradient(180deg, #ffffff 0%, #e5e5e5 100%);
+            padding-right: 0;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 0.4vw;
+            box-shadow: inset 0 0 0 0.1vw rgba(0, 0, 0, 0.1);
+        }
+
+        .team2score {
+            height: 86%;
+            aspect-ratio: 1/1;
+            background: linear-gradient(180deg, #ffffff 0%, #e5e5e5 100%);
+            padding-left: 0;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-right: 0.4vw;
+            box-shadow: inset 0 0 0 0.1vw rgba(0, 0, 0, 0.1);
+        }
+
+        .teamtextcontainer {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            min-width: 0;
+            padding: 0 0.45vw;
+        }
+
+        .teamtext {
+            color: white;
+            font-size: 2.1vw;
+            white-space: nowrap;
+            letter-spacing: 0.02em;
+        }
+
+        input.teamtext {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: transparent;
+            border: 0;
+            outline: 0;
+            box-shadow: none;
+            width: 100%;
+            text-align: right;
+        }
+
+        .scoretext {
+            color: rgb(0, 0, 0);
+            font-size: 1.3vw;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+        }
+
+        input.scoretext {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+            background: transparent;
+            border: 0;
+            outline: 0;
+            box-shadow: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+
+        input.scoretext::-webkit-outer-spin-button,
+        input.scoretext::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="roundbadge">Round 1 / 12</div>
+    <div class="scoreline">
+        <div class="team1scoreline">
+            <img id="team1-logo" class="teamlogo" src="{{team1logo}}">
+            <div class="teamtextcontainer">
+                <input id="team1-title" class="teamtext" type="text" value="{{team1}}">
+            </div>
+            <div id="team1-score-box" class="team1score">
+                <input id="team1-score" class="scoretext" type="number" value="0">
+            </div>
+        </div>
+        <div class="team2scoreline">
+            <div id="team2-score-box" class="team2score">
+                <input id="team2-score" class="scoretext" type="number" value="0">
+            </div>
+            <div class="teamtextcontainer">
+                <input id="team2-title" class="teamtext" type="text" value="{{team2}}" style="text-align: left;">
+            </div>
+            <img id="team2-logo" class="teamlogo" src="{{team2logo}}">
+        </div>
+    </div>
+
+    <script>
+        function bumpPortRaw(url) {
+            const noProto = url.replace(/^https?:\/\//, "");
+            const [host, ...rest] = noProto.split("/");
+
+            if (!host.includes(":")) {
+                return host; // no port
+            }
+
+            const [hostname, port] = host.split(":");
+            return `${hostname}:${Number(port) + 1}`;
+        }
+        console.log(window.location.href)
+        const ws = new WebSocket("ws://" + bumpPortRaw(window.location.href));
+
+        ws.addEventListener("open", (event) => {
+            ws.send(`id:${window.location.href.split("=").pop()}:purpose:overlay`);
+        });
+
+        ws.onmessage = (event) => {
+            console.log("Received message:", event.data);
+            const msg = JSON.parse(event.data);
+
+            if (msg.overlayId) {
+                console.log("Updating overlay with ID:", msg.overlayId);
+                document.getElementById("team1-score").value = msg.team1;
+                document.getElementById("team2-score").value = msg.team2;
+                document.querySelector(".roundbadge").textContent = `Round ${msg.round} / 12`;
+            }
+        };
+    </script>
+</body>
+
+</html>

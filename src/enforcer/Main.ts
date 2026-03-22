@@ -6,8 +6,8 @@ import MongoHandler from "src/enforcer/handlers/MongoHandler";
 import dotenv from "dotenv";
 import path from "path";
 import { dir } from "console";
-import WebHandler from "./handlers/WebHandler";
-import {GenericBot} from "src/general/classes/GenericBot";
+import WebHandler from "../general/handlers/WebHandler";
+import {Env, GenericBot} from "src/general/classes/GenericBot";
 import { Singleton } from "src/container/Singleton";
 import { Scope } from "src/container/Scope";
 
@@ -16,12 +16,10 @@ export class Main extends GenericBot {
     private messages = require("../resources/messages.json");
 
     private mongo: MongoHandler;
-    private webHandler: WebHandler;
 
-    public constructor(mongoHandler: MongoHandler, webHandler: WebHandler, eventHandler: EventHandler, scope: Scope) {
+    public constructor(mongoHandler: MongoHandler, eventHandler: EventHandler, scope: Scope) {
         super(Main.getBotInfo().token, "src/enforcer/commands", eventHandler, scope);
         this.mongo = mongoHandler;
-        this.webHandler = webHandler;
 
         this.client.on('ready', () => {
             this.eventHandler?.startEventListeners(this);
@@ -62,16 +60,4 @@ export class Main extends GenericBot {
         process.env.DEBUG = info.debug ? "true" : "false";
         return process.env as unknown as Env;
     }
-}
-
-interface Env {
-    APP_PORT: number | undefined;
-    DB_CONN_STRING: string | undefined;
-    DB_NAME: string | undefined;
-    DEBUG: boolean | undefined;
-    DEBUG_TOKEN: string | undefined;
-    DEBUG_SAVE_CD: number | undefined;
-    BOT_TOKEN: string | undefined;
-    GUILDS_COLLECTION: string | undefined;
-    USERS_COLLECTION: string | undefined;
 }

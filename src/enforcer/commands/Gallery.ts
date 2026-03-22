@@ -11,7 +11,7 @@ import { Rating } from "../../general/classes/Rating";
 import { json } from "stream/consumers";
 import GeneralUtils from "src/general/utils/GeneralUtils";
 import HTMLUtils from "src/general/utils/HTMLUtils";
-import WebHandler from "../handlers/WebHandler";
+import WebHandler from "../../general/handlers/WebHandler";
 import { Singleton } from "src/container/Singleton";
 
 @Singleton
